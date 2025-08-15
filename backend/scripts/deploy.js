@@ -27,13 +27,10 @@ async function main() {
   const insightRegistryAddress = await insightRegistry.getAddress();
   console.log("InsightRegistry deployed to:", insightRegistryAddress);
 
-  // Grant MilestoneRegistry permission to mint NFTs
-  const grantRoleTx = await achievementNFT.grantRole(
-    await achievementNFT.OWNER_ROLE(),
-    milestoneRegistryAddress
-  );
-  await grantRoleTx.wait();
-  console.log("MilestoneRegistry granted minting permission on AchievementNFT");
+  // Transfer ownership of AchievementNFT to MilestoneRegistry
+  const transferOwnershipTx = await achievementNFT.transferOwnership(milestoneRegistryAddress);
+  await transferOwnershipTx.wait();
+  console.log("AchievementNFT ownership transferred to MilestoneRegistry");
 
   // Grant backend permission to publish insights
   const [deployer] = await hre.ethers.getSigners();

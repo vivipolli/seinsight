@@ -1,0 +1,62 @@
+{"level":"info","message":"🚀 Seinsight AI Backend running on port 3000","service":"Seinsight-ai-backend","timestamp":"2025-08-15T19:39:06.223Z"}
+{"level":"info","message":"📊 Health check: http://localhost:3000/health","service":"Seinsight-ai-backend","timestamp":"2025-08-15T19:39:06.227Z"}
+{"level":"info","message":"🚀 Seinsight AI Backend running on port 3000","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:18:36.838Z"}
+{"level":"info","message":"📊 Health check: http://localhost:3000/health","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:18:36.843Z"}
+{"level":"info","message":"🚀 Seinsight AI Backend running on port 3000","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:27.251Z"}
+{"level":"info","message":"📊 Health check: http://localhost:3000/health","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:27.256Z"}
+{"level":"info","message":"Generating insights from business report","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:36.459Z"}
+{"level":"info","message":"Starting insight generation workflow from business report","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:36.460Z"}
+{"level":"info","message":"Step 1: Generating hashtags from business report","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:36.461Z"}
+{"level":"info","message":"Generating hashtags from business report","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:36.462Z"}
+{"level":"info","message":"Generated 10 hashtags: businessgrowth, growth, scaling, startup, entrepreneur, startuplife, marketing, digitalmarketing, socialmediamarketing, trending","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:36.463Z"}
+{"level":"info","message":"Step 2: Collecting social media data","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:36.463Z"}
+{"level":"info","message":"Collecting social data for 10 hashtags","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:36.464Z"}
+{"level":"info","message":"Using mock data for social media collection","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:36.464Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: businessgrowth","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:36.465Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: growth","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:37.967Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: scaling","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:39.468Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: startup","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:40.971Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: entrepreneur","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:42.473Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: startuplife","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:43.974Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: marketing","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:45.476Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: digitalmarketing","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:46.979Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: socialmediamarketing","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:48.481Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: trending","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:49.984Z"}
+{"level":"info","message":"Step 3: Extracting comments from social media posts","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.487Z"}
+{"level":"info","message":"Extracted 50 comments from 20 posts","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.489Z"}
+{"level":"info","message":"Step 4: Analyzing comments with AI","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.489Z"}
+{"level":"info","message":"Analyzing social media comments","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.490Z"}
+{"level":"info","message":"Step 5: Generating final insights","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.492Z"}
+{"level":"info","message":"Insight generation workflow completed successfully","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.493Z"}
+{"level":"info","message":"Scheduling insights for user user_123","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.541Z"}
+{"level":"info","message":"Scheduling insight generation for user user_123","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.542Z"}
+{"level":"info","message":"Getting insight history for user user_123","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.556Z"}
+{"level":"info","message":"Getting insight history for user user_123","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.556Z"}
+{"level":"info","message":"Getting insight stats for user user_123","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.565Z"}
+{"level":"info","message":"Getting insight insight_1","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:51.582Z"}
+{"level":"info","message":"Generating insights from business report","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:56.647Z"}
+{"level":"info","message":"Starting insight generation workflow from business report","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:56.647Z"}
+{"level":"info","message":"Step 1: Generating hashtags from business report","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:56.647Z"}
+{"level":"info","message":"Generating hashtags from business report","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:56.648Z"}
+{"level":"info","message":"Generated 10 hashtags: businessgrowth, growth, scaling, startup, entrepreneur, startuplife, marketing, digitalmarketing, socialmediamarketing, trending","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:56.648Z"}
+{"level":"info","message":"Step 2: Collecting social media data","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:56.648Z"}
+{"level":"info","message":"Collecting social data for 10 hashtags","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:56.648Z"}
+{"level":"info","message":"Using mock data for social media collection","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:56.648Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: businessgrowth","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:56.649Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: growth","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:58.151Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: scaling","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:20:59.653Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: startup","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:01.155Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: entrepreneur","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:02.657Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: startuplife","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:04.159Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: marketing","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:05.661Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: digitalmarketing","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:07.163Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: socialmediamarketing","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:08.665Z"}
+{"level":"info","message":"Getting mock Instagram data for hashtag: trending","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:10.166Z"}
+{"level":"info","message":"Step 3: Extracting comments from social media posts","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:11.669Z"}
+{"level":"info","message":"Extracted 50 comments from 20 posts","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:11.669Z"}
+{"level":"info","message":"Step 4: Analyzing comments with AI","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:11.669Z"}
+{"level":"info","message":"Analyzing social media comments","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:11.670Z"}
+{"level":"info","message":"Step 5: Generating final insights","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:11.670Z"}
+{"level":"info","message":"Insight generation workflow completed successfully","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:21:11.671Z"}
+{"level":"info","message":"🚀 Seinsight AI Backend running on port 3000","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:25:04.729Z"}
+{"level":"info","message":"📊 Health check: http://localhost:3000/health","service":"Seinsight-ai-backend","timestamp":"2025-08-15T22:25:04.733Z"}
