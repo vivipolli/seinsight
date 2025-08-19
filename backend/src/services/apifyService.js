@@ -16,6 +16,7 @@ const apifyService = {
       logger.info(`Running Instagram scraper for hashtag: ${hashtag}`);
       
       const input = {
+        hashtags: [hashtag], // Apify expects hashtags array
         addParentData: false,
         enhanceUserSearchWithFacebookPage: false,
         isUserReelFeedURL: false,
@@ -23,7 +24,6 @@ const apifyService = {
         onlyPostsNewerThan: options.onlyPostsNewerThan || "1 week",
         resultsLimit: options.resultsLimit || 180,
         resultsType: "posts",
-        search: hashtag,
         searchLimit: options.searchLimit || 1,
         searchType: "hashtag"
       };

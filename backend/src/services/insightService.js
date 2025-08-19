@@ -8,13 +8,14 @@ const {
 } = require('../utils/insightUtils');
 
 const insightService = {
-  // Main workflow: Business Report → Hashtags → Social Data → AI Analysis → Insights
+  // Main insight generation workflow
   async generateInsightsFromReport(businessReport, options = {}) {
+    let startTime = Date.now(); // Define startTime at the beginning
+    
     try {
       logger.info('Starting insight generation workflow from business report');
       
       const workflowId = generateWorkflowId();
-      const startTime = Date.now();
       
       // Step 1: Generate hashtags from business report using AI
       logger.info('Step 1: Generating hashtags from business report');

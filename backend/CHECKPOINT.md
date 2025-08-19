@@ -20,9 +20,9 @@
   - Scripts de deploy e teste
 
 ### 🔄 **Em Progresso:**
-- [ ] Instalação de dependências do backend
-- [ ] Testes de integração
-- [ ] Deploy dos contratos
+- [x] Instalação de dependências do backend
+- [x] Testes de integração
+- [x] Deploy dos contratos
 
 ### ❌ **Pendente:**
 - [ ] Frontend (React/Next.js)
@@ -30,33 +30,6 @@
 - [ ] IA real (atualmente mockada)
 - [ ] Deploy em produção
 
-## 🚀 **Próximos Passos Imediatos (Hoje)**
-
-### 1. **Resolver Dependências Backend**
-```bash
-cd backend
-npm install --legacy-peer-deps
-```
-
-### 2. **Testar Backend**
-```bash
-cd backend
-npm run dev
-# Verificar se server inicia na porta 3000
-```
-
-### 3. **Compilar e Testar Smart Contracts**
-```bash
-cd backend
-npm run compile
-npm run test
-```
-
-### 4. **Deploy Local dos Contratos**
-```bash
-cd backend
-npm run deploy
-```
 
 ## 🤖 **Integração ElizaOS (Próximo Milestone)**
 
@@ -134,7 +107,7 @@ const SeinsightPlugin = {
 ### **Dia 1-2: Backend & Smart Contracts** ✅
 - [x] Estrutura backend
 - [x] Smart contracts
-- [ ] Testes e deploy
+- [x] Testes e deploy
 
 ### **Dia 3-4: Frontend Básico**
 - [ ] Setup React/Next.js

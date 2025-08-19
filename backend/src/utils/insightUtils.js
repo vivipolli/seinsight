@@ -7,12 +7,19 @@ const generateWorkflowId = () => {
 
 // Extract all comments from social media posts
 const extractAllComments = (socialData, apifyService) => {
+  if (!socialData || !Array.isArray(socialData)) {
+    logger.warn('No social data provided or invalid format');
+    return [];
+  }
+  
   const allComments = [];
   
   socialData.forEach(post => {
-    // Extract comments using Apify service method
-    const postComments = apifyService.extractComments([post]);
-    allComments.push(...postComments);
+    if (post && post.data) {
+      // Extract comments using Apify service method
+      const postComments = apifyService.extractComments([post]);
+      allComments.push(...postComments);
+    }
   });
   
   logger.info(`Extracted ${allComments.length} comments from ${socialData.length} posts`);
