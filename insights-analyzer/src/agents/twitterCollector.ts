@@ -38,7 +38,7 @@ export const twitterCollectorAgent: Character = {
     
     // Search settings (for when enabled)
     TWITTER_SEARCH_INTERVAL: "60", // 1 minute between searches
-    TWITTER_MAX_RESULTS_PER_SEARCH: "10", // Limit results to 10 per search
+    TWITTER_MAX_RESULTS_PER_SEARCH: "30", // Limit results to 10 per search
     TWITTER_INCLUDE_REPLIES: "false", // Exclude replies
     TWITTER_INCLUDE_RETWEETS: "false", // Exclude retweets
     
