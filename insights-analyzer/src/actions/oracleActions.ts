@@ -12,11 +12,26 @@ export const generateTop3SignalsAction: Action = {
 
   handler: async (runtime, message) => {
     try {
+      console.log('🔮 generateTop3SignalsAction triggered!');
       const content = typeof message.content === 'string' ? message.content : message.content.text || '';
+      console.log('📝 Message content:', content);
       
       // Check if Twitter data is available from collectTwitterDataAction
       const settings = runtime.character.settings || {};
-      const twitterData = settings.twitterData as any;
+      let twitterData = settings.twitterData as any;
+      
+      // If no Twitter data in settings, try to get from message metadata
+      if (!twitterData) {
+        console.log('🔍 No Twitter data in settings, checking message metadata...');
+        const messageMetadata = (message as any).metadata;
+        if (messageMetadata?.twitterData) {
+          twitterData = messageMetadata.twitterData;
+          console.log('📊 Found Twitter data in message metadata');
+        }
+      }
+      
+      console.log('🔍 Checking for Twitter data in settings:', !!twitterData);
+      console.log('📊 Twitter data available:', twitterData ? 'YES' : 'NO');
       
       let prompt: string;
       

@@ -14,10 +14,10 @@ export class SeinsightService {
     const hashtags = await this.generateRealHashtags(businessDescription);
 
     // Step 2: Collect Twitter data using hashtags generated
-    await this.collectTwitterData(hashtags, businessDescription);
+    const twitterData = await this.collectTwitterData(hashtags, businessDescription);
 
     // Step 3: Generate signals from Twitter data and publish to oracle
-    await this.generateSignalsFromTwitterData(businessDescription);
+    await this.generateSignalsFromTwitterData(businessDescription, twitterData);
 
     // Step 4: Analyze market data using REAL ElizaOS InsightCompiler
     const analysis = await this.analyzeRealMarket(hashtags, businessDescription);
@@ -25,7 +25,7 @@ export class SeinsightService {
     return { hashtags, analysis };
   }
 
-  async collectTwitterData(hashtags: string[], businessDescription: string): Promise<void> {
+  async collectTwitterData(hashtags: string[], businessDescription: string): Promise<any> {
     try {
       // Create session with TwitterCollector
       const sessionResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions`, {
@@ -68,18 +68,33 @@ export class SeinsightService {
       // Wait for agent response
       await this.delay(30000);
 
+      // Get messages to extract Twitter data
+      const messagesResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}/messages`);
+      const messagesData = await messagesResponse.json() as MessagesResponse;
+      
+      // Extract Twitter data from agent response
+      let twitterData = null;
+      for (const msg of messagesData.messages) {
+        if (msg.isAgent && (msg as any).metadata?.twitterData) {
+          twitterData = (msg as any).metadata.twitterData;
+          break;
+        }
+      }
+
       // Clean up session
       await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}`, {
         method: 'DELETE'
       });
 
+      return twitterData;
+
     } catch (error) {
       console.error('Twitter collection error:', error);
-      // Don't throw error, continue with analysis
+      return null;
     }
   }
 
-  async generateSignalsFromTwitterData(businessDescription: string): Promise<void> {
+  async generateSignalsFromTwitterData(businessDescription: string, twitterData?: any): Promise<void> {
     try {
       // Create session with InsightCompiler for oracle signals
       const sessionResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions`, {
@@ -114,7 +129,8 @@ export class SeinsightService {
           content: `Generate top 3 signals from collected Twitter data for: ${businessDescription}`,
           metadata: {
             requestType: "oracle-signals",
-            source: "twitter-data"
+            source: "twitter-data",
+            twitterData: twitterData
           }
         })
       });

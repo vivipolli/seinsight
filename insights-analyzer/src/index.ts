@@ -4,7 +4,7 @@ import { character } from './character.ts';
 // Import Seinsight AI agents
 import { 
   hashtagGeneratorAgent, 
-  instagramAnalyzerAgent, 
+  // instagramAnalyzerAgent, 
   twitterCollectorAgent, 
   insightCompilerAgent 
 } from './agents/index';
@@ -13,11 +13,8 @@ import {
 import {
   generateHashtagsAction,
   collectInstagramDataAction,
-  analyzeInstagramSentimentAction,
+  // analyzeInstagramSentimentAction,
   collectTwitterDataAction,
-  analyzeTwitterTrendsAction,
-  searchTwitterContentAction,
-  searchKeywordsAction,
   generateTop3SignalsAction,
   getOracleStatusAction
 } from './agents/index';
@@ -43,11 +40,8 @@ const initSeinsightAgents = ({ runtime }: { runtime: IAgentRuntime }) => {
   // Register custom actions
   runtime.registerAction(generateHashtagsAction);
   runtime.registerAction(collectInstagramDataAction);
-  runtime.registerAction(analyzeInstagramSentimentAction);
+  // runtime.registerAction(analyzeInstagramSentimentAction);
   runtime.registerAction(collectTwitterDataAction);
-  runtime.registerAction(analyzeTwitterTrendsAction);
-  runtime.registerAction(searchTwitterContentAction);
-  runtime.registerAction(searchKeywordsAction);
   runtime.registerAction(compileInsightsAction);
   runtime.registerAction(generateStrategicReportAction);
   runtime.registerAction(criticalAnalysisAction);

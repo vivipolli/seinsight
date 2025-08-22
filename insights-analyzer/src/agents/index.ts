@@ -13,7 +13,7 @@ export { insightCompilerAgent } from './insightCompiler';
 // Export actions
 export { generateHashtagsAction } from '../actions/hashtagActions';
 export { collectInstagramDataAction, analyzeInstagramSentimentAction } from '../actions/instagramActions';
-export { collectTwitterDataAction, analyzeTwitterTrendsAction, searchTwitterContentAction, searchKeywordsAction } from '../actions/twitterActions';
+export { collectTwitterDataAction } from '../actions/twitterActions';
 export { criticalAnalysisAction, compileInsightsAction, generateStrategicReportAction } from '../actions/compilerActions';
 export { generateTop3SignalsAction, getOracleStatusAction } from '../actions/oracleActions';
 
