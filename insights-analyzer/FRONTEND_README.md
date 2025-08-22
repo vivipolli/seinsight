@@ -1,115 +1,87 @@
-# 🎨 Seinsight AI Frontend
+# Frontend React - Seinsight AI
 
-Frontend simples e elegante para demonstrar o fluxo completo de análise de mercado Web3.
+## 🚀 Como rodar o frontend
 
-## 🚀 Como Executar
+### Pré-requisitos
+- Node.js 18+ 
+- Yarn ou npm
+- ElizaOS rodando na porta 3000
 
-### Opção 1: Servidor Python (Recomendado)
+### 1. Instalar dependências
 ```bash
-# Navegue para o diretório do projeto
 cd insights-analyzer
-
-# Execute o servidor Python
-python3 serve-frontend.py
+yarn install
 ```
 
-### Opção 2: Servidor Node.js
+### 2. Rodar o ElizaOS (backend)
 ```bash
-# Navegue para o diretório do projeto
-cd insights-analyzer
-
-# Execute o servidor Node.js
-PORT=3002 node server.js
+yarn start
+# ou
+yarn dev
 ```
 
-### Opção 3: Servidor HTTP Simples
+### 3. Rodar o frontend React
+Em outro terminal:
 ```bash
-# Navegue para o diretório frontend
-cd insights-analyzer/src/frontend
-
-# Execute servidor HTTP simples
-python3 -m http.server 3002
+yarn frontend:dev
 ```
 
-## 📱 Acesse o Frontend
+O frontend estará disponível em: http://localhost:5173
 
-Após iniciar o servidor, abra seu navegador e acesse:
-```
-http://localhost:3002
-```
-
-## 🎯 Funcionalidades
-
-### ✅ Interface Moderna e Elegante
-- Design limpo e responsivo
-- Gradientes modernos
-- Animações suaves
-- Tipografia Inter (Google Fonts)
-
-### ✅ Fluxo Completo Demonstrado
-1. **Input do Usuário**: Campo de texto para descrição do negócio
-2. **Geração de Hashtags**: Simulação da geração de hashtags relevantes
-3. **Análise de Mercado**: Simulação da análise crítica da IA
-4. **Resultados Visuais**: Apresentação clara dos insights
-
-### ✅ Análise Crítica Balanceada
-- **Riscos de Mercado**: Incertezas regulatórias, volatilidade
-- **Obstáculos**: Problemas de escalabilidade, complexidade técnica
-- **Cenário Competitivo**: Competição crescente, necessidade de diferenciação
-- **Oportunidades Realistas**: Ferramentas de verificação, parcerias
-- **Pontos de Falha**: Falta de confiança, modelos insustentáveis
-- **Recomendações Balanceadas**: Transparência, diversificação
-
-## 🛠️ Tecnologias Utilizadas
-
-- **HTML5**: Estrutura semântica
-- **CSS3**: Estilos modernos com gradientes e animações
-- **JavaScript Vanilla**: Lógica de interação sem frameworks
-- **Python/Node.js**: Servidores simples para desenvolvimento
-
-## 📁 Estrutura de Arquivos
-
-```
-insights-analyzer/
-├── src/frontend/
-│   └── index.html          # Frontend principal
-├── server.js               # Servidor Node.js
-├── serve-frontend.py       # Servidor Python
-└── FRONTEND_README.md      # Este arquivo
+### 4. Build para produção
+```bash
+yarn frontend:build
 ```
 
-## 🎨 Características do Design
+## 📁 Estrutura do Frontend
 
-### Visual
-- **Gradiente de Fundo**: Roxo para azul (#667eea → #764ba2)
-- **Cards Elevados**: Sombras suaves e bordas arredondadas
-- **Hashtags Coloridas**: Gradientes nas tags geradas
-- **Loading Animado**: Spinner com animação CSS
+```
+src/frontend/
+├── components/          # Componentes React
+│   ├── SeinsightApp.tsx # Componente principal
+│   ├── Header.tsx       # Cabeçalho
+│   ├── InputSection.tsx # Formulário de entrada
+│   ├── LoadingSection.tsx # Loading spinner
+│   ├── ResultsSection.tsx # Exibição de resultados
+│   └── index.ts         # Barrel exports
+├── services/
+│   └── SeinsightService.ts # Lógica de API
+├── types/
+│   └── index.ts         # Tipos TypeScript
+├── styles/
+│   └── seinsight.css    # Estilos específicos
+├── index.tsx            # Entry point React
+├── index.css            # Estilos globais
+└── index.html           # HTML base
+```
 
-### UX/UI
-- **Responsivo**: Funciona em desktop e mobile
-- **Feedback Visual**: Estados de loading e sucesso
-- **Scroll Suave**: Navegação fluida entre seções
-- **Acessibilidade**: Contraste adequado e navegação por teclado
+## 🔧 Scripts disponíveis
 
-## 🔧 Personalização
+- `yarn frontend:dev` - Desenvolvimento com hot reload
+- `yarn frontend:build` - Build para produção
+- `yarn frontend:preview` - Preview do build
+- `yarn start` - ElizaOS (backend)
+- `yarn dev` - ElizaOS em modo desenvolvimento
 
-Para personalizar o frontend:
+## 🌐 Funcionalidades
 
-1. **Cores**: Edite as variáveis CSS no `<style>` do `index.html`
-2. **Texto**: Modifique os textos diretamente no HTML
-3. **Lógica**: Ajuste o JavaScript na seção `<script>`
-4. **Análise**: Personalize os dados simulados na função `analyzeMarket()`
+- ✅ Interface React moderna
+- ✅ Integração com ElizaOS agents
+- ✅ Geração de hashtags via HashtagGenerator
+- ✅ Análise crítica via InsightCompiler
+- ✅ Loading states e error handling
+- ✅ Design responsivo
+- ✅ Tipagem TypeScript completa
 
-## 🚀 Próximos Passos
+## 🔗 Integração com ElizaOS
 
-Para integrar com o backend real:
+O frontend se conecta aos seguintes agents:
+- **HashtagGenerator**: `635b4207-35ce-0ec5-a517-52445ae58215`
+- **InsightCompiler**: `3643e20d-b322-0e3e-a089-87f323dc94ad`
 
-1. Substituir as funções simuladas por chamadas reais à API
-2. Conectar com o ElizaOS para geração real de hashtags
-3. Integrar com análise real de dados do X/Twitter
-4. Adicionar autenticação se necessário
+## 🎨 Estilos
 
----
-
-**🎯 Frontend pronto para demonstração do MVP!**
+- Fonte: Inter (Google Fonts)
+- Gradiente: Roxo/Azul
+- Design: Moderno e responsivo
+- Framework: CSS puro + Tailwind

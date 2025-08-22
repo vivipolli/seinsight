@@ -1,5 +1,79 @@
 import { Action } from '@elizaos/core';
 
+export const criticalAnalysisAction: Action = {
+  name: 'CRITICAL_ANALYSIS',
+  description: 'Perform critical analysis of business ideas with balanced perspective',
+
+  validate: async (runtime, message) => {
+    const content = typeof message.content === 'string' ? message.content : message.content.text || '';
+    return content.toLowerCase().includes('analyze') ||
+           content.toLowerCase().includes('analysis') ||
+           content.toLowerCase().includes('critical') ||
+           content.toLowerCase().includes('business') ||
+           content.toLowerCase().includes('idea');
+  },
+
+  handler: async (runtime, message) => {
+    try {
+      const content = typeof message.content === 'string' ? message.content : message.content.text || '';
+      
+      // Use AI model to generate critical analysis
+      const analysisPrompt = `You are a business analyst specializing in Web3 and blockchain markets. Analyze the following business idea with a critical and balanced perspective:
+
+${content}
+
+Provide a comprehensive analysis that includes:
+
+1. **Market Risks and Challenges**
+   - Regulatory uncertainties
+   - Technical complexity
+   - Market volatility
+   - Competition analysis
+
+2. **Potential Obstacles and Limitations**
+   - Scalability issues
+   - User adoption challenges
+   - Resource requirements
+   - Technology dependencies
+
+3. **Competitive Landscape Considerations**
+   - Existing solutions
+   - Market saturation
+   - Differentiation challenges
+   - Entry barriers
+
+4. **Realistic Opportunities** (not overly optimistic)
+   - Valid use cases
+   - Market gaps
+   - Partnership potential
+   - Revenue streams
+
+5. **Potential Failure Points to Watch For**
+   - Common pitfalls
+   - Risk factors
+   - Warning signs
+   - Mitigation strategies
+
+6. **Balanced Recommendations**
+   - Strategic approach
+   - Risk management
+   - Resource allocation
+   - Timeline considerations
+
+Be objective, data-driven, and avoid overly positive bias. Focus on actionable insights that help entrepreneurs make informed decisions.`;
+
+      const response = await runtime.useModel('TEXT_LARGE', {
+        prompt: analysisPrompt
+      });
+
+      return { success: true, text: response };
+    } catch (error) {
+      console.error('Critical analysis error:', error);
+      return { success: false, text: "❌ Error performing critical analysis. Please try again." };
+    }
+  }
+};
+
 export const compileInsightsAction: Action = {
   name: 'COMPILE_INSIGHTS',
   description: 'Compile all collected insights into a comprehensive report',
@@ -14,76 +88,48 @@ export const compileInsightsAction: Action = {
 
   handler: async (runtime, message) => {
     try {
-      // Call backend API to get insight history
-      const response = await fetch('http://localhost:3000/api/insights/history/default?limit=5', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+      // Use AI model to generate insights compilation
+      const compilationPrompt = `You are an insights compiler. Create a comprehensive report based on the following request:
+
+${typeof message.content === 'string' ? message.content : message.content.text || ''}
+
+Provide a structured report that includes:
+
+1. **Executive Summary**
+   - Key findings
+   - Overall assessment
+   - Strategic implications
+
+2. **Data Analysis**
+   - Trends identified
+   - Patterns observed
+   - Statistical insights
+
+3. **Market Intelligence**
+   - Competitive landscape
+   - Market opportunities
+   - Risk factors
+
+4. **Strategic Recommendations**
+   - Actionable insights
+   - Priority areas
+   - Implementation guidance
+
+5. **Next Steps**
+   - Immediate actions
+   - Long-term strategy
+   - Success metrics
+
+Be comprehensive, objective, and provide actionable insights.`;
+
+      const response = await runtime.useModel('TEXT_LARGE', {
+        prompt: compilationPrompt
       });
 
-      const result = await response.json() as any;
-
-      if (result.success) {
-        const history = result.data;
-        
-        let responseText = `📋 **Insights Compilation Report:**\n\n`;
-        responseText += `**Total Insights Analyzed:** ${history.length}\n`;
-        responseText += `**Analysis Period:** Recent insights\n\n`;
-
-        if (history.length > 0) {
-          responseText += `📊 **Recent Insights Summary:**\n`;
-          
-          history.slice(0, 3).forEach((insight: any, index: number) => {
-            responseText += `${index + 1}. **${insight.timestamp || 'Recent'}**\n`;
-            
-            if (insight.hashtags?.generated) {
-              responseText += `   └ Hashtags: ${insight.hashtags.generated.slice(0, 3).join(', ')}\n`;
-            }
-            
-            if (insight.socialMedia?.postsCollected) {
-              responseText += `   └ Posts: ${insight.socialMedia.postsCollected}, Engagement: ${insight.socialMedia.engagement?.averageEngagement || 0}\n`;
-            }
-            
-            if (insight.sentiment?.overall) {
-              responseText += `   └ Sentiment: ${insight.sentiment.overall}\n`;
-            }
-            
-            responseText += `\n`;
-          });
-        }
-
-        // Get overall statistics
-        const statsResponse = await fetch('http://localhost:3000/api/insights/stats/default', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
-
-        const statsResult = await statsResponse.json() as any;
-
-        if (statsResult.success) {
-          const stats = statsResult.data;
-          
-          responseText += `📈 **Overall Performance:**\n`;
-          responseText += `└ Total Insights: ${stats.totalInsights}\n`;
-          responseText += `└ Avg Execution Time: ${(stats.averageExecutionTime / 1000).toFixed(1)}s\n`;
-          responseText += `└ Total Posts Analyzed: ${stats.totalPostsCollected}\n`;
-          responseText += `└ Avg Engagement Score: ${stats.averageEngagementScore}\n\n`;
-        }
-
-        responseText += `💡 **Key Recommendations:**\n`;
-        responseText += `• Continue monitoring trending hashtags for engagement opportunities\n`;
-        responseText += `• Focus on content that generates positive sentiment\n`;
-        responseText += `• Leverage insights for strategic content planning\n`;
-
-        return { success: true, text: responseText };
-      } else {
-        return { success: false, text: "❌ Failed to compile insights. Please ensure insights have been generated first." };
-      }
+      return { success: true, text: response };
     } catch (error) {
-      return { success: false, text: "❌ Error compiling insights. Please check your backend connection." };
+      console.error('Insights compilation error:', error);
+      return { success: false, text: "❌ Error compiling insights. Please try again." };
     }
   }
 };
@@ -102,65 +148,48 @@ export const generateStrategicReportAction: Action = {
 
   handler: async (runtime, message) => {
     try {
-      // Get latest insight for strategic analysis
-      const response = await fetch('http://localhost:3000/api/insights/history/default?limit=1', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+      // Use AI model to generate strategic report
+      const strategicPrompt = `You are a strategic business consultant. Generate strategic recommendations based on the following request:
+
+${typeof message.content === 'string' ? message.content : message.content.text || ''}
+
+Provide a strategic report that includes:
+
+1. **Strategic Assessment**
+   - Current situation analysis
+   - Strengths and weaknesses
+   - Opportunities and threats
+
+2. **Strategic Recommendations**
+   - Short-term actions (0-6 months)
+   - Medium-term strategy (6-18 months)
+   - Long-term vision (18+ months)
+
+3. **Implementation Roadmap**
+   - Priority initiatives
+   - Resource requirements
+   - Timeline and milestones
+
+4. **Risk Management**
+   - Potential risks
+   - Mitigation strategies
+   - Contingency plans
+
+5. **Success Metrics**
+   - KPIs and metrics
+   - Performance indicators
+   - Evaluation criteria
+
+Be strategic, practical, and provide clear actionable guidance.`;
+
+      const response = await runtime.useModel('TEXT_LARGE', {
+        prompt: strategicPrompt
       });
 
-      const result = await response.json() as any;
-
-      if (result.success && result.data.length > 0) {
-        const latestInsight = result.data[0];
-        
-        let responseText = `🎯 **Strategic Recommendations Report:**\n\n`;
-        responseText += `**Based on Latest Analysis:** ${latestInsight.timestamp || 'Recent'}\n\n`;
-
-        if (latestInsight.insights?.summary) {
-          responseText += `📊 **Current Performance:**\n`;
-          responseText += `└ Overall Sentiment: ${latestInsight.insights.summary.overallSentiment}\n`;
-          responseText += `└ Top Topic: ${latestInsight.insights.summary.topTopic}\n`;
-          responseText += `└ Engagement Score: ${latestInsight.insights.summary.engagementScore}\n\n`;
-        }
-
-        if (latestInsight.insights?.recommendations) {
-          responseText += `🎯 **Strategic Recommendations:**\n`;
-          latestInsight.insights.recommendations.forEach((rec: any, index: number) => {
-            responseText += `${index + 1}. **${rec.type.toUpperCase()}** - ${rec.suggestion}\n`;
-            responseText += `   └ Priority: ${rec.priority}\n\n`;
-          });
-        }
-
-        if (latestInsight.insights?.opportunities) {
-          responseText += `🚀 **Growth Opportunities:**\n`;
-          latestInsight.insights.opportunities.forEach((opp: any, index: number) => {
-            responseText += `${index + 1}. **${opp.type.toUpperCase()}** - ${opp.description}\n`;
-            responseText += `   └ Priority: ${opp.priority}, Confidence: ${(opp.confidence * 100).toFixed(1)}%\n\n`;
-          });
-        }
-
-        if (latestInsight.actionItems) {
-          responseText += `📋 **Action Items:**\n`;
-          latestInsight.actionItems.forEach((action: any, index: number) => {
-            responseText += `${index + 1}. **${action.type.toUpperCase()}** - ${action.action}\n`;
-            responseText += `   └ ${action.description}\n`;
-            responseText += `   └ Priority: ${action.priority}, Timeline: ${action.timeline}\n\n`;
-          });
-        }
-
-        responseText += `📈 **Next Steps:**\n`;
-        responseText += `• Implement high-priority recommendations\n`;
-        responseText += `• Monitor performance metrics\n`;
-        responseText += `• Schedule follow-up analysis\n`;
-
-        return { success: true, text: responseText };
-      } else {
-        return { success: false, text: "❌ Failed to generate strategic report. Please ensure insights have been generated first." };
-      }
+      return { success: true, text: response };
     } catch (error) {
-      return { success: false, text: "❌ Error generating strategic report. Please check your backend connection." };
+      console.error('Strategic report error:', error);
+      return { success: false, text: "❌ Error generating strategic report. Please try again." };
     }
   }
 };

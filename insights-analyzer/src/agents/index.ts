@@ -11,10 +11,11 @@ export { twitterCollectorAgent } from './twitterCollector';
 export { insightCompilerAgent } from './insightCompiler';
 
 // Export actions
-export { generateHashtagsAction, analyzeBusinessReportAction } from '../actions/hashtagActions';
+export { generateHashtagsAction } from '../actions/hashtagActions';
 export { collectInstagramDataAction, analyzeInstagramSentimentAction } from '../actions/instagramActions';
 export { collectTwitterDataAction, analyzeTwitterTrendsAction, searchTwitterContentAction, searchKeywordsAction } from '../actions/twitterActions';
-export { compileInsightsAction, generateStrategicReportAction } from '../actions/compilerActions';
+export { criticalAnalysisAction, compileInsightsAction, generateStrategicReportAction } from '../actions/compilerActions';
+export { generateTop3SignalsAction, getOracleStatusAction } from '../actions/oracleActions';
 
 // Export providers
 export { businessContextProvider, socialMediaMetricsProvider, hashtagPerformanceProvider, insightHistoryProvider } from '../providers/seinsightProviders';

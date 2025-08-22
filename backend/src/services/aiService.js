@@ -59,7 +59,7 @@ const aiService = {
       await axios.post(
         `${elizaUrl}/api/messaging/sessions/${sessionId}/messages`,
         {
-          content: businessReport,
+          content: `Generate hashtags for: ${businessReport}`,
           metadata: {
             requestType: 'hashtag-generation',
             timestamp: new Date().toISOString()
@@ -68,7 +68,7 @@ const aiService = {
       );
       
       // Step 3: Wait for agent response
-      await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds
+      await new Promise(resolve => setTimeout(resolve, 30000)); // Wait 30 seconds
       
       // Step 4: Get messages from session
       const messagesResponse = await axios.get(`${elizaUrl}/api/messaging/sessions/${sessionId}/messages`);
@@ -106,6 +106,38 @@ const aiService = {
       logger.error('Error calling ElizaOS HashtagGenerator:', error);
       return { success: false };
     }
+  },
+
+  // Extract hashtags from agent response
+  extractHashtagsFromResponse(response) {
+    if (!response || typeof response !== 'string') {
+      return [];
+    }
+    
+    // Extract hashtags that start with #
+    const hashtags = response.match(/#\w+/g) || [];
+    
+    // Remove duplicates and return
+    return [...new Set(hashtags)];
+  },
+
+  // Parse insights from agent response
+  parseInsightsFromResponse(response) {
+    if (!response || typeof response !== 'string') {
+      return {
+        summary: 'No analysis available',
+        recommendations: [],
+        opportunities: [],
+        actionItems: []
+      };
+    }
+    
+    return {
+      summary: response,
+      recommendations: [],
+      opportunities: [],
+      actionItems: []
+    };
   },
 
   // Analyze social media comments and generate insights via ElizaOS InsightCompiler
@@ -175,7 +207,7 @@ const aiService = {
       );
       
       // Step 3: Wait for agent response
-      await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds
+      await new Promise(resolve => setTimeout(resolve, 30000)); // Wait 30 seconds
       
       // Step 4: Get messages from session
       const messagesResponse = await axios.get(`${elizaUrl}/api/messaging/sessions/${sessionId}/messages`);

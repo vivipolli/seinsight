@@ -12,16 +12,21 @@ import {
 // Import Seinsight AI actions
 import {
   generateHashtagsAction,
-  analyzeBusinessReportAction,
   collectInstagramDataAction,
   analyzeInstagramSentimentAction,
   collectTwitterDataAction,
   analyzeTwitterTrendsAction,
   searchTwitterContentAction,
   searchKeywordsAction,
-  compileInsightsAction,
-  generateStrategicReportAction
+  generateTop3SignalsAction,
+  getOracleStatusAction
 } from './agents/index';
+
+import {
+  compileInsightsAction,
+  generateStrategicReportAction,
+  criticalAnalysisAction
+} from './actions/compilerActions';
 
 // Import Seinsight AI providers
 import {
@@ -37,7 +42,6 @@ const initSeinsightAgents = ({ runtime }: { runtime: IAgentRuntime }) => {
   
   // Register custom actions
   runtime.registerAction(generateHashtagsAction);
-  runtime.registerAction(analyzeBusinessReportAction);
   runtime.registerAction(collectInstagramDataAction);
   runtime.registerAction(analyzeInstagramSentimentAction);
   runtime.registerAction(collectTwitterDataAction);
@@ -46,6 +50,9 @@ const initSeinsightAgents = ({ runtime }: { runtime: IAgentRuntime }) => {
   runtime.registerAction(searchKeywordsAction);
   runtime.registerAction(compileInsightsAction);
   runtime.registerAction(generateStrategicReportAction);
+  runtime.registerAction(criticalAnalysisAction);
+  runtime.registerAction(generateTop3SignalsAction);
+  runtime.registerAction(getOracleStatusAction);
   
   // Register custom providers
   runtime.registerProvider(businessContextProvider);
@@ -76,13 +83,13 @@ export const hashtagGeneratorProjectAgent: ProjectAgent = {
 };
 
 // InstagramAnalyzer agent
-export const instagramAnalyzerProjectAgent: ProjectAgent = {
-  character: instagramAnalyzerAgent,
-  init: async (runtime: IAgentRuntime) => {
-    logger.info('Initializing InstagramAnalyzer agent');
-    initSeinsightAgents({ runtime });
-  },
-};
+// export const instagramAnalyzerProjectAgent: ProjectAgent = {
+//   character: instagramAnalyzerAgent,
+//   init: async (runtime: IAgentRuntime) => {
+//     logger.info('Initializing InstagramAnalyzer agent');
+//     initSeinsightAgents({ runtime });
+//   },
+// };
 
 // TwitterCollector agent
 export const twitterCollectorProjectAgent: ProjectAgent = {
@@ -107,7 +114,7 @@ const project: Project = {
   agents: [
     projectAgent,
     hashtagGeneratorProjectAgent,
-    instagramAnalyzerProjectAgent,
+    // instagramAnalyzerProjectAgent, // Currently disabled
     twitterCollectorProjectAgent,
     insightCompilerProjectAgent
   ],

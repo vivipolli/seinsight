@@ -7,6 +7,9 @@ const {
   generateFinalInsights
 } = require('../utils/insightUtils');
 
+// Import Twitter mock data from separate file
+const { twitterMockResponse, hashtagSearchMockResponse } = require('../mocks/twitterMockData');
+
 const insightService = {
   // Main insight generation workflow
   async generateInsightsFromReport(businessReport, options = {}) {
@@ -28,32 +31,24 @@ const insightService = {
       const hashtags = hashtagResult.hashtags;
       logger.info(`Generated ${hashtags.length} hashtags: ${hashtags.join(', ')}`);
       
-      // Step 2: Collect social media data for each hashtag
-      logger.info('Step 2: Collecting social media data');
-      const socialDataResult = await this.collectSocialData(hashtags, options);
+      // Step 2: Get mock Twitter data (skip Instagram/Apify)
+      logger.info('Step 2: Getting mock Twitter data');
+      const mockTwitterData = this.getMockTwitterData(hashtags);
       
-      if (!socialDataResult.success) {
-        throw new Error(`Failed to collect social data: ${socialDataResult.error}`);
-      }
-      
-      // Step 3: Extract comments from social media posts
-      logger.info('Step 3: Extracting comments from social media posts');
-      const allComments = extractAllComments(socialDataResult.data, apifyService);
-      
-      // Step 4: Analyze comments using AI
-      logger.info('Step 4: Analyzing comments with AI');
-      const analysisResult = await aiService.analyzeSocialComments(allComments);
+      // Step 3: Analyze comments using AI
+      logger.info('Step 3: Analyzing comments with AI');
+      const analysisResult = await aiService.analyzeSocialComments(mockTwitterData);
       
       if (!analysisResult.success) {
         throw new Error(`Failed to analyze comments: ${analysisResult.error}`);
       }
       
-      // Step 5: Generate final insights
-      logger.info('Step 5: Generating final insights');
+      // Step 4: Generate final insights
+      logger.info('Step 4: Generating final insights');
       const finalInsights = generateFinalInsights({
         businessReport,
         hashtagResult,
-        socialDataResult,
+        socialDataResult: { data: mockTwitterData, summary: { totalPosts: mockTwitterData.length } },
         analysisResult,
         workflowId,
         executionTime: Date.now() - startTime
@@ -68,8 +63,8 @@ const insightService = {
           workflowId,
           executionTime: Date.now() - startTime,
           hashtagsAnalyzed: hashtags.length,
-          postsCollected: socialDataResult.summary.totalPosts,
-          commentsAnalyzed: allComments.length
+          postsCollected: mockTwitterData.length,
+          commentsAnalyzed: mockTwitterData.length
         }
       };
       
@@ -155,6 +150,49 @@ const insightService = {
     };
   },
 
+  // Get mock Twitter data for hashtags
+  getMockTwitterData(hashtags) {
+    // Use the existing Twitter mock response
+    const mockData = [];
+    
+    // Add the main Twitter mock data
+    if (twitterMockResponse.data.twitter.recentTweets) {
+      mockData.push(...twitterMockResponse.data.twitter.recentTweets.map(tweet => ({
+        id: tweet.id,
+        platform: 'twitter',
+        hashtag: hashtags[0] || 'blockchain', // Use first hashtag as default
+        content: tweet.text,
+        likesCount: tweet.public_metrics.like_count,
+        commentsCount: tweet.public_metrics.reply_count,
+        sharesCount: tweet.public_metrics.retweet_count,
+        timestamp: tweet.created_at,
+        author: tweet.author,
+        sentiment: tweet.sentiment
+      })));
+    }
+    
+    // Add hashtag-specific mock data for each hashtag
+    hashtags.forEach(hashtag => {
+      const hashtagData = hashtagSearchMockResponse(hashtag);
+      if (hashtagData.data.tweets) {
+        mockData.push(...hashtagData.data.tweets.map(tweet => ({
+          id: tweet.id,
+          platform: 'twitter',
+          hashtag: hashtag,
+          content: tweet.text,
+          likesCount: tweet.metrics.likes,
+          commentsCount: tweet.metrics.replies,
+          sharesCount: tweet.metrics.retweets,
+          timestamp: tweet.created_at,
+          author: tweet.author,
+          sentiment: tweet.sentiment
+        })));
+      }
+    });
+    
+    logger.info(`Generated ${mockData.length} mock Twitter posts for ${hashtags.length} hashtags`);
+    return mockData;
+  },
 
 
   // Schedule recurring insight generation
