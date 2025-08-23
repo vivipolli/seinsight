@@ -6,6 +6,9 @@ export const collectTwitterDataAction: Action = {
   description: 'Collect Twitter data using hashtags and topics for analysis',
 
   validate: async (runtime, message) => {
+    console.log('🔍 Validating collectTwitterDataAction...');
+    const content = typeof message.content === 'string' ? message.content : JSON.stringify(message.content);
+    console.log('🔍 Message content:', content);
     return true;
   },
 
@@ -13,12 +16,24 @@ export const collectTwitterDataAction: Action = {
     try {
       console.log('🐦 collectTwitterDataAction triggered!');
       
-      // Get hashtags from character settings (populated by HashtagGenerator)
+      // Get hashtags from character settings or message metadata
       const settings = runtime.character.settings || {};
-      const hashtags = Array.isArray(settings.trackedHashtags) ? settings.trackedHashtags : [];
+      let hashtags = Array.isArray(settings.trackedHashtags) ? settings.trackedHashtags : [];
+      
+      // If no hashtags in settings, try to get from message metadata
+      if (hashtags.length === 0) {
+        const messageMetadata = (message as any).metadata;
+        console.log('🔍 Message metadata for hashtags:', messageMetadata);
+        if (messageMetadata?.hashtags && Array.isArray(messageMetadata.hashtags)) {
+          hashtags = messageMetadata.hashtags;
+          console.log('📋 Using hashtags from message metadata:', hashtags);
+        } else {
+          console.log('❌ No hashtags found in message metadata');
+        }
+      }
       
       if (hashtags.length === 0) {
-        return { success: true, text: "❌ No hashtags available from HashtagGenerator. Please run HashtagGenerator first to generate hashtags for monitoring." };
+        return { success: true, text: "❌ No hashtags available. Please run HashtagGenerator first to generate hashtags for monitoring." };
       }
 
       // Use mock data instead of API calls

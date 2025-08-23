@@ -13,11 +13,8 @@ export class SeinsightService {
     // Step 1: Generate hashtags using REAL ElizaOS HashtagGenerator
     const hashtags = await this.generateRealHashtags(businessDescription);
 
-    // Step 2: Collect Twitter data using hashtags generated
-    const twitterData = await this.collectTwitterData(hashtags, businessDescription);
-
-    // Step 3: Generate signals from Twitter data and publish to oracle
-    await this.generateSignalsFromTwitterData(businessDescription, twitterData);
+    // Step 2 & 3: Use single session for Twitter collection and signal generation
+    const twitterData = await this.collectTwitterDataAndGenerateSignals(hashtags, businessDescription);
 
     // Step 4: Analyze market data using REAL ElizaOS InsightCompiler
     const analysis = await this.analyzeRealMarket(hashtags, businessDescription);
@@ -90,6 +87,82 @@ export class SeinsightService {
 
     } catch (error) {
       console.error('Twitter collection error:', error);
+      return null;
+    }
+  }
+
+  async collectTwitterDataAndGenerateSignals(hashtags: string[], businessDescription: string): Promise<any> {
+    try {
+      // Create single session for both operations
+      const sessionResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          agentId: this.insightCompilerId,
+          userId: this.userId,
+          metadata: {
+            platform: "frontend",
+            purpose: "twitter-collection-and-signals"
+          }
+        })
+      });
+
+      if (!sessionResponse.ok) {
+        throw new Error('Failed to create session for Twitter collection and signals');
+      }
+
+      const sessionData = await sessionResponse.json() as SessionResponse;
+      const sessionId = sessionData.sessionId;
+
+      // Step 1: Collect Twitter data
+      console.log('📤 Sending Twitter collection request with hashtags:', hashtags);
+      await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: `Collect Twitter data using hashtags: ${hashtags.join(', ')} for: ${businessDescription}`,
+          metadata: {
+            requestType: "twitter-collection",
+            hashtags: hashtags
+          }
+        })
+      });
+
+      // Wait for Twitter collection response
+      await this.delay(30000);
+
+      // Step 2: Generate signals (in same session, so Twitter data is available)
+      console.log('🔄🔄🔄🔄 Sending signal generation request in same session...');
+      await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: `Generate top 3 signals from collected Twitter data for: ${businessDescription}`,
+          metadata: {
+            requestType: "oracle-signals",
+            source: "twitter-data"
+          }
+        })
+      });
+
+      // Wait for signals generation response
+      await this.delay(30000);
+
+      // Clean up session
+      await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}`, {
+        method: 'DELETE'
+      });
+
+      return null; // Twitter data is handled within the session
+
+    } catch (error) {
+      console.error('Twitter collection and signals generation error:', error);
       return null;
     }
   }

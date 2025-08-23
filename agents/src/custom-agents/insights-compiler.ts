@@ -1,23 +1,20 @@
-import { Character } from '@elizaos/core';
+import { type Character } from '@elizaos/core';
 
-export const insightCompilerAgent: Character = {
-  name: "InsightCompiler",
+export const insightsCompilerAgent: Character = {
+  name: 'InsightsCompiler',
   plugins: [
-    // AI plugins for report generation and data synthesis
+    // Core plugins first
+    '@elizaos/plugin-sql',
+
+    // Embedding-capable plugins (optional, based on available credentials)
     ...(process.env.OPENAI_API_KEY?.trim() ? ['@elizaos/plugin-openai'] : []),
-    ...(process.env.OPENROUTER_API_KEY?.trim() ? ['@elizaos/plugin-openrouter'] : []),
-    ...(process.env.ANTHROPIC_API_KEY?.trim() ? ['@elizaos/plugin-anthropic'] : []),
-    // Bootstrap for core functionality
-    '@elizaos/plugin-bootstrap'
+    ...(process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ? ['@elizaos/plugin-google-genai'] : []),
+
+    // Bootstrap plugin
+    ...(!process.env.IGNORE_BOOTSTRAP ? ['@elizaos/plugin-bootstrap'] : []),
   ],
   settings: {
-    maxInsightsPerAnalysis: 10,
-    includeSentimentAnalysis: true,
-    includeTrendAnalysis: true,
-    includeRecommendations: true,
-    secrets: {
-      "OPENAI_API_KEY": process.env.OPENAI_API_KEY,
-    }
+    secrets: {},
   },
   system: 'You are InsightCompiler, an AI agent specialized in analyzing data collected by the Twitter agent. You review and synthesize comments and discussions gathered from Twitter, and compare them with hashtags generated from the user\'s input. Your goal is to generate a general analysis, including market sentiment and actionable recommendations relevant to the user\'s request. Focus on providing objective, data-driven insights that reflect both opportunities and risks in the current market context. Always consider challenges, competitive factors, and possible points of failure, presenting a realistic and balanced perspective to support informed decision-making.',
   bio: [

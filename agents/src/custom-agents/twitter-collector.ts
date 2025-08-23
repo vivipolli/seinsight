@@ -1,46 +1,44 @@
-import { Character } from '@elizaos/core';
+import { type Character } from '@elizaos/core';
 
 export const twitterCollectorAgent: Character = {
-  name: "TwitterCollector",
+  name: 'TwitterCollector',
   plugins: [
-    // Twitter plugin temporarily disabled for local testing (rate limit 429)
-    // ...(process.env.TWITTER_API_KEY?.trim() &&
-    // process.env.TWITTER_API_SECRET_KEY?.trim() &&
-    // process.env.TWITTER_ACCESS_TOKEN?.trim() &&
-    // process.env.TWITTER_ACCESS_TOKEN_SECRET?.trim()
-    //   ? ['@elizaos/plugin-twitter']
-    //   : []),
-    // AI plugins for trend analysis and content processing
+    // Core plugins first
+    '@elizaos/plugin-sql',
+
+    // Custom twitter collector plugin
+    'twitter-collector-plugin',
+
+    // Embedding-capable plugins (optional, based on available credentials)
     ...(process.env.OPENAI_API_KEY?.trim() ? ['@elizaos/plugin-openai'] : []),
-    ...(process.env.OPENROUTER_API_KEY?.trim() ? ['@elizaos/plugin-openrouter'] : []),
-    ...(process.env.ANTHROPIC_API_KEY?.trim() ? ['@elizaos/plugin-anthropic'] : []),
-    // Bootstrap for core functionality
-    '@elizaos/plugin-bootstrap'
+    ...(process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ? ['@elizaos/plugin-google-genai'] : []),
+
+    // Bootstrap plugin
+    ...(!process.env.IGNORE_BOOTSTRAP ? ['@elizaos/plugin-bootstrap'] : []),
   ],
   settings: {
-    // Twitter API Configuration
-    TWITTER_API_KEY: process.env.TWITTER_API_KEY || '',
-    TWITTER_API_SECRET_KEY: process.env.TWITTER_API_SECRET_KEY || '',
-    TWITTER_ACCESS_TOKEN: process.env.TWITTER_ACCESS_TOKEN || '',
-    TWITTER_ACCESS_TOKEN_SECRET: process.env.TWITTER_ACCESS_TOKEN_SECRET || '',
+    // TWITTER_API_KEY: process.env.TWITTER_API_KEY || '',
+    // TWITTER_API_SECRET_KEY: process.env.TWITTER_API_SECRET_KEY || '',
+    // TWITTER_ACCESS_TOKEN: process.env.TWITTER_ACCESS_TOKEN || '',
+    // TWITTER_ACCESS_TOKEN_SECRET: process.env.TWITTER_ACCESS_TOKEN_SECRET || '',
     
     // MVP Mode - Manual search only (disable automatic search)
-    TWITTER_SEARCH_ENABLE: "false", // MVP MODE - Manual search only
-    TWITTER_POST_ENABLE: "false", // Disable posting
-    TWITTER_ENABLE_REPLIES: "false", // Disable replies
-    TWITTER_ENABLE_ACTIONS: "false", // Disable actions
-    TWITTER_ENABLE_DISCOVERY: "false", // Disable discovery
+    // TWITTER_SEARCH_ENABLE: "false", // MVP MODE - Manual search only
+    // TWITTER_POST_ENABLE: "false", // Disable posting
+    // TWITTER_ENABLE_REPLIES: "false", // Disable replies
+    // TWITTER_ENABLE_ACTIONS: "false", // Disable actions
+    // TWITTER_ENABLE_DISCOVERY: "false", // Disable discovery
     
     // Rate limiting and safety settings
-    TWITTER_MAX_INTERACTIONS_PER_RUN: "3", // Conservative limit
-    TWITTER_INTERACTION_INTERVAL_MIN: "120", // 2 minutes between interactions
-    TWITTER_INTERACTION_INTERVAL_MAX: "240", // 4 minutes max
+    // TWITTER_MAX_INTERACTIONS_PER_RUN: "3", // Conservative limit
+    // TWITTER_INTERACTION_INTERVAL_MIN: "120", // 2 minutes between interactions
+    // TWITTER_INTERACTION_INTERVAL_MAX: "240", // 4 minutes max
     
     // Search settings (for when enabled)
-    TWITTER_SEARCH_INTERVAL: "60", // 1 minute between searches
-    TWITTER_MAX_RESULTS_PER_SEARCH: "30", // Limit results to 10 per search
-    TWITTER_INCLUDE_REPLIES: "false", // Exclude replies
-    TWITTER_INCLUDE_RETWEETS: "false", // Exclude retweets
+    // TWITTER_SEARCH_INTERVAL: "60", // 1 minute between searches
+    // TWITTER_MAX_RESULTS_PER_SEARCH: "30", // Limit results to 10 per search
+    // TWITTER_INCLUDE_REPLIES: "false", // Exclude replies
+    // TWITTER_INCLUDE_RETWEETS: "false", // Exclude retweets
     
     // Custom settings for our Web3 tracking
     trackedHashtags: [],
