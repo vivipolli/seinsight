@@ -24,7 +24,7 @@ export const criticalAnalysisAction: Action = {
 
       Keep analysis under 200 words.`;
 
-      const response = await runtime.useModel('TEXT_SMALL', {
+      const response = await runtime.useModel('TEXT_LARGE', {
         prompt: analysisPrompt
       });
 

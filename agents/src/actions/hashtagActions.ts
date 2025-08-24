@@ -26,7 +26,7 @@ export const generateHashtagsAction: Action = {
         businessReport
       ].join('\n');
 
-      const aiResponse = await runtime.useModel('TEXT_SMALL', {
+      const aiResponse = await runtime.useModel('TEXT_LARGE', {
         prompt: prompt
       });
       
