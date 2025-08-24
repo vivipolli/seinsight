@@ -4,7 +4,7 @@ export const Header: React.FC = () => {
   return (
     <div style={styles.header}>
       <h1 style={styles.title}>Seinsight AI</h1>
-      <p style={styles.subtitle}>Análise inteligente de mercado para empreendedores Web3</p>
+      <p style={styles.subtitle}>Intelligent market analysis for Web3 entrepreneurs</p>
     </div>
   );
 };

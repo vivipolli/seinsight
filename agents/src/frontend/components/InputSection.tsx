@@ -31,10 +31,10 @@ export const InputSection: React.FC<InputSectionProps> = ({
 
   return (
     <div style={styles.inputSection}>
-      <h2 style={styles.title}>Descreva seu negócio</h2>
+      <h2 style={styles.title}>Describe your business</h2>
       <p style={styles.description}>
-        Conte-nos sobre sua ideia ou negócio para que possamos analisar o mercado e fornecer insights
-        valiosos da comunidade Web3.
+        Tell us about your idea or business so we can analyze the market and provide valuable insights
+        from the Web3 community.
       </p>
 
       {error && (
@@ -46,12 +46,12 @@ export const InputSection: React.FC<InputSectionProps> = ({
       <form onSubmit={handleSubmit}>
         <div style={styles.formGroup}>
           <label htmlFor="businessDescription" style={styles.label}>
-            Descrição do seu negócio ou ideia:
+            Description of your business or idea:
           </label>
           <textarea
             id="businessDescription"
             style={styles.textarea}
-            placeholder="Ex: Preciso avaliar no mercado os interesses por verificação de media e conteúdo na blockchain, também sobre a necessidade de comprovação e validação de media como autenticas e não geradas por IA..."
+            placeholder="Ex: I need to evaluate market interest in media and content verification on blockchain, also about the need for proof and validation of media as authentic and not AI-generated..."
             value={businessDescription}
             onChange={(e) => setBusinessDescription((e.target as HTMLTextAreaElement).value)}
             required
@@ -66,7 +66,7 @@ export const InputSection: React.FC<InputSectionProps> = ({
           }}
           disabled={isLoading}
         >
-          <span>{isLoading ? '⏳ Analisando...' : '🔍 Analisar Mercado'}</span>
+          <span>{isLoading ? '⏳ Analyzing...' : '🔍 Analyze Market'}</span>
         </button>
       </form>
     </div>

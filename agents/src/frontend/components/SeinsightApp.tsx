@@ -3,7 +3,6 @@ import { Header } from './Header';
 import { InputSection } from './InputSection';
 import { LoadingSection } from './LoadingSection';
 import { ResultsSection } from './ResultsSection';
-import { OracleNotifications } from './OracleNotifications';
 import { SeinsightService } from '../services/SeinsightService';
 import { AnalysisResult } from '../types';
 
@@ -11,7 +10,6 @@ export const SeinsightApp: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [showOracleNotifications, setShowOracleNotifications] = useState(false);
 
   const seinsightService = new SeinsightService();
 
@@ -26,7 +24,7 @@ export const SeinsightApp: React.FC = () => {
       const analysisResult = await seinsightService.performRealAnalysis(businessDescription);
       setResults(analysisResult);
     } catch (err) {
-      setError('Erro ao realizar análise. Tente novamente.');
+      setError('Error performing analysis. Please try again.');
       console.error('Analysis error:', err);
     } finally {
       setIsLoading(false);
@@ -39,18 +37,7 @@ export const SeinsightApp: React.FC = () => {
 
   return (
     <div style={styles.container}>
-      <Header />
-      
-      {/* Oracle Notifications Button */}
-      <div style={styles.oracleButtonContainer}>
-        <button
-          onClick={() => setShowOracleNotifications(true)}
-          style={styles.oracleButton}
-          title="Oracle Notifications"
-        >
-          🔮 Oracle
-        </button>
-      </div>
+      <Header />  
       
       <div style={styles.mainContent}>
         <InputSection 
@@ -67,11 +54,6 @@ export const SeinsightApp: React.FC = () => {
           isVisible={!!results && !isLoading}
         />
       </div>
-
-      <OracleNotifications
-        isVisible={showOracleNotifications}
-        onClose={() => setShowOracleNotifications(false)}
-      />
     </div>
   );
 };

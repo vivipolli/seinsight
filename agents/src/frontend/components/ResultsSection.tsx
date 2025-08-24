@@ -23,10 +23,10 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ results, isVisib
 
   return (
     <div id="results-section" style={styles.resultsSection}>
-      <h2 style={styles.title}>📊 Análise de Mercado Completa</h2>
+      <h2 style={styles.title}>📊 Complete Market Analysis</h2>
 
       <div style={styles.resultCard}>
-        <h3 style={styles.cardTitle}>🏷️ Hashtags Geradas</h3>
+        <h3 style={styles.cardTitle}>🏷️ Generated Hashtags</h3>
         <div style={styles.hashtags}>
           {results.hashtags.map((hashtag: string, index: number) => (
             <span key={index} style={styles.hashtag}>
@@ -37,7 +37,7 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ results, isVisib
       </div>
 
       <div style={styles.resultCard}>
-        <h3 style={styles.cardTitle}>🧠 Análise Crítica da IA</h3>
+        <h3 style={styles.cardTitle}>🧠 AI Critical Analysis</h3>
         <div style={styles.analysisContent}>
           <div style={styles.analysisText}>
             {results.analysis}
@@ -47,7 +47,7 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ results, isVisib
 
       {results.signalsResult && (
         <div style={styles.resultCard}>
-          <h3 style={styles.cardTitle}>🔮 Sinais Publicados na Blockchain</h3>
+          <h3 style={styles.cardTitle}>🔮 Signals Published on Blockchain</h3>
           <div style={styles.analysisContent}>
             <div style={styles.analysisText}>
               {results.signalsResult}

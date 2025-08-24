@@ -10,8 +10,8 @@ export const LoadingSection: React.FC<LoadingSectionProps> = ({ isVisible }) => 
   return (
     <div style={styles.loading}>
       <div style={styles.spinner}></div>
-      <p>Analisando mercado e gerando insights...</p>
-      <p style={styles.subText}>Isso pode levar alguns segundos</p>
+      <p>Analyzing market and generating insights...</p>
+      <p style={styles.subText}>This may take a few seconds</p>
     </div>
   );
 };
