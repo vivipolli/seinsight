@@ -2,7 +2,7 @@ import { Action } from '@elizaos/core';
 import { blockchainService, type SignalBatch } from '../services/blockchainService';
 import { getExplorerUrl, ORACLE_CONFIG } from '../contracts/oracleConfig';
 import { IPFSService, type TwitterDataHash } from '../services/ipfsService';
-import { twitterMockData } from '../mocks/twitterMockData';
+import { twitterMockData } from '../mocks/twitterMockData.js';
 
 export const generateTop3SignalsAction: Action = {
   name: 'GENERATE_TOP3_SIGNALS',
