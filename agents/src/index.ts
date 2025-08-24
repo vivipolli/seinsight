@@ -3,9 +3,12 @@ import { keywordsGeneratorPlugin } from './plugins/keywords-generator';
 import { keywordsGeneratorAgent } from './custom-agents/keywords-generator.ts';
 import { twitterCollectorAgent } from './custom-agents/twitter-collector.ts';
 import { insightsCompilerAgent } from './custom-agents/insights-compiler.ts';
+import { oracleAgent } from './custom-agents/oracle-agent.ts';
 import { ProjectStarterTestSuite } from './__tests__/e2e/project-starter.e2e';
 
 import { twitterCollectorPlugin } from './plugins/twitter-collector.ts';
+import { insightsCompilerPlugin } from './plugins/insights-compiler.ts';
+import { oraclePlugin } from './plugins/oracle.ts';
 import { collectTwitterDataAction } from './actions/twitterActions.ts';
 import hashtagsProvider, { hashtagsTable } from './providers/keywords-generator.ts';
 
@@ -53,6 +56,11 @@ const initInsightsCompiler = ({ runtime }: { runtime: IAgentRuntime }) => {
   logger.info({ name: insightsCompilerAgent.name }, 'Name:');
 };
 
+const initOracleAgent = ({ runtime }: { runtime: IAgentRuntime }) => {
+  logger.info('Initializing OracleAgent agent');
+  logger.info({ name: oracleAgent.name }, 'Name:');
+};
+
 export const keywordsProjectGeneratorAgent: ProjectAgent = {
   character: keywordsGeneratorAgent,
   init: async (runtime: IAgentRuntime) => await initKeywordsGenerator({ runtime }),
@@ -70,12 +78,19 @@ export const twitterProjectCollectorAgent: ProjectAgent = {
 export const insightsProjectCompilerAgent: ProjectAgent = {
   character: insightsCompilerAgent,
   init: async (runtime: IAgentRuntime) => await initInsightsCompiler({ runtime }),
-  // plugins: [starterPlugin], <-- Import custom plugins here
+  plugins: [insightsCompilerPlugin],
+  tests: [ProjectStarterTestSuite], // Export tests from ProjectAgent
+};
+
+export const oracleProjectAgent: ProjectAgent = {
+  character: oracleAgent,
+  init: async (runtime: IAgentRuntime) => await initOracleAgent({ runtime }),
+  plugins: [oraclePlugin],
   tests: [ProjectStarterTestSuite], // Export tests from ProjectAgent
 };
 
 const project: Project = {
-  agents: [keywordsProjectGeneratorAgent, twitterProjectCollectorAgent, insightsProjectCompilerAgent],
+  agents: [keywordsProjectGeneratorAgent, twitterProjectCollectorAgent, insightsProjectCompilerAgent, oracleProjectAgent],
 };
 
 

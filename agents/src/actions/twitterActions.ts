@@ -1,30 +1,19 @@
 import { Action, IAgentRuntime, Memory } from '@elizaos/core';
 import { twitterMockData } from '../mocks/twitterMockData.js';
-import hashtagsProvider from 'src/providers/keywords-generator.js';
+import hashtagsProvider from '../providers/keywords-generator';
 
 export const collectTwitterDataAction: Action = {
   name: 'COLLECT_TWITTER_DATA',
   description: 'Collect Twitter data using hashtags and topics for analysis',
 
-  validate: async (runtime, message) => {
-    console.log('🔍 Validating collectTwitterDataAction...');
-    const content = typeof message.content === 'string' ? message.content : JSON.stringify(message.content);
-    console.log('🔍 Message content:', content);
-    return true;
-  },
+  validate: async (runtime, message) => { return true; },
 
   handler: async (runtime, message) => {
     try {
       console.log('🐦 collectTwitterDataAction triggered!');
-      
-      // Get hashtags from character settings or message metadata
-      let hashtags = await hashtagsProvider.get(runtime, message, {
-        values: { hashtags: [] },
-        data: { hashtags: [] },
-        text: 'No hashtags found for this user'
-      });
+      const content = typeof message.content === 'string' ? message.content : JSON.stringify(message.content);
+      const hashtags = content?.split(' ').filter(word => word.startsWith('#'));     
 
-      console.log('🔍 Hashtags:', hashtags);
 
       // In production, we would use the hashtags from the hashtagsProvider to collect twitter data
       // For now, we use mock data
@@ -37,7 +26,7 @@ export const collectTwitterDataAction: Action = {
       
 
       let responseText = `🐦 **Twitter Data Collection Results:**\n\n`;
-      responseText += `**Hashtags from HashtagGenerator:** ${hashtags.values?.hashtags.join(', ')}\n`;
+      responseText += `**Hashtags from HashtagGenerator:** ${hashtags?.join(', ')}\n`;
       responseText += `**Collection Status:** ✅ Completed (Mock Data)\n`;
       responseText += `**Platforms:** Twitter\n\n`;
 
@@ -49,11 +38,13 @@ export const collectTwitterDataAction: Action = {
       responseText += `\n📈 **Next Step:** Use "generate top 3 signals" to publish trending signals to the oracle.`;
 
 
+      console.log('🐦 Sending Twitter data response via callback:', responseText);
+
       return { 
         success: true, 
         text: responseText,
         values: {
-          hashtags: hashtags.values?.hashtags || [],
+          hashtags: hashtags || [],
           twitterData: mockTweets.slice(0, 3) // TODO: Remove this once we have real data
         }
       };

@@ -44,6 +44,17 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ results, isVisib
           </div>
         </div>
       </div>
+
+      {results.signalsResult && (
+        <div style={styles.resultCard}>
+          <h3 style={styles.cardTitle}>🔮 Sinais Publicados na Blockchain</h3>
+          <div style={styles.analysisContent}>
+            <div style={styles.analysisText}>
+              {results.signalsResult}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

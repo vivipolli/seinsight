@@ -63,7 +63,7 @@ export class SeinsightService {
       });
 
       // Wait for agent response
-      await this.delay(30000);
+      await this.delay(60000);
 
       // Get messages to extract Twitter data
       const messagesResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}/messages`);

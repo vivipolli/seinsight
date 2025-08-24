@@ -16,6 +16,7 @@ export interface MessagesResponse {
 export interface AnalysisResult {
   hashtags: string[];
   analysis: string;
+  signalsResult?: string; // Optional field for blockchain publication result
 }
 
 // Global declarations

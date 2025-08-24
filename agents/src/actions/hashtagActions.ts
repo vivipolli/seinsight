@@ -5,16 +5,7 @@ export const generateHashtagsAction: Action = {
   name: 'GENERATE_HASHTAGS',
   description: 'Generate relevant hashtags from business report',  
 
-  validate: async (runtime, message) => {
-    console.log('🔍 Should run GENERATE_HASHTAGS:', 'running');
-    try {
-      console.log('🔍 Validate completed successfully');
-      return true;
-    } catch (error) {
-      console.log('🔍 Validate error:', error);
-      return false;
-    }
-  },
+  validate: async (runtime, message) => { return true; },
 
 
   handler: async (runtime, message) => {
@@ -49,11 +40,8 @@ export const generateHashtagsAction: Action = {
       const unique = Array.from(new Set(hashtags)).slice(0, 10);
 
       if (unique.length > 0) {
-        console.log('🔍 About to save to database...');
         // Save hashtags to database for sharing with other agents
         const db = runtime.db;
-        console.log('🔍 Database object:', typeof db);
-        console.log('🔍 Hashtags to save:', unique);
         
         try {
           await db.insert(hashtagsTable).values({
@@ -81,7 +69,7 @@ export const generateHashtagsAction: Action = {
         responseText += `\n📊 Count: ${unique.length} (max 3)`;
         responseText += `\n💾 Saved to database for sharing with other agents`;
 
-        console.log('🔍 Returning response:', { success: true, text: responseText });
+        console.log('🔍 Returning response:', responseText);
         return { success: true, text: responseText };
       } else {
         return { success: false, text: '❌ No valid hashtags generated.' };

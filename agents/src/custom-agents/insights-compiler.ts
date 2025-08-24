@@ -6,6 +6,9 @@ export const insightsCompilerAgent: Character = {
     // Core plugins first
     '@elizaos/plugin-sql',
 
+    // Custom insights compiler plugin
+    'insights-compiler-plugin',
+
     // Embedding-capable plugins (optional, based on available credentials)
     ...(process.env.OPENAI_API_KEY?.trim() ? ['@elizaos/plugin-openai'] : []),
     ...(process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ? ['@elizaos/plugin-google-genai'] : []),
