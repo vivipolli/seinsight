@@ -1,12 +1,13 @@
 import { AnalysisResult, SessionResponse, Message, MessagesResponse } from '../types';
 import { Prompts } from './prompts';
 import { TwitterDataParser } from './twitterDataParser';
+import { ProcessingStep } from '../hooks/useProcessingProgress';
 
-export class SeinsightService {
+export class SeinsightServiceWithProgressFixed {
   private elizaosUrl = 'http://localhost:3000';
   private keywordsGeneratorId = '6045e764-c7b4-049a-9288-8a61c67c894c';
   private twitterCollectorId = '49694f6f-1a24-047d-b67f-1b3a56096764';
-  private insightsCompilerId = '49694f6f-1a24-047d-b67f-1b3a56096764';
+  private insightsCompilerId = '8d382733-c09f-0d62-9f6e-cdb1afd3a4d0';
   private oracleAgentId = '8d382733-c09f-0d62-9f6e-cdb1afd3a4d0';
   private userId = '550e8400-e29b-41d4-a716-446655440000';
   private twitterDataParser = new TwitterDataParser();
@@ -15,20 +16,39 @@ export class SeinsightService {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  async performRealAnalysis(businessDescription: string): Promise<AnalysisResult> {
-    const hashtags = await this.generateRealHashtags(businessDescription);
-    const twitterData = await this.collectTwitterData(hashtags, businessDescription);
-    const signalsResult = await this.generateSignals(businessDescription);
-    const analysisResult = await this.performCriticalAnalysis(hashtags, businessDescription, twitterData);
+  async performRealAnalysis(
+    businessDescription: string, 
+    onProgress?: (step: ProcessingStep) => void
+  ): Promise<AnalysisResult> {
+    try {
+      // Step 1: Generate Hashtags
+      onProgress?.('hashtags');
+      const hashtags = await this.generateRealHashtags(businessDescription);
 
-    return { 
-      hashtags, 
-      analysis: analysisResult,
-      signalsResult: signalsResult
-    };
+      // Step 2: Collect Twitter Data
+      onProgress?.('twitter');
+      const twitterData = await this.collectTwitterData(hashtags, businessDescription);
+
+      // Step 3: Generate Signals (Blockchain)
+      onProgress?.('blockchain');
+      const signalsResult = await this.generateSignals(twitterData);
+
+      // Step 4: Perform Analysis
+      onProgress?.('analysis');
+      const analysisResult = await this.performCriticalAnalysis(twitterData);
+
+      return { 
+        hashtags, 
+        analysis: analysisResult,
+        signalsResult: signalsResult
+      };
+    } catch (error) {
+      console.error('Analysis error:', error);
+      throw error;
+    }
   }
 
-  async generateSignals(businessDescription: string): Promise<any> {
+  async generateSignals(twitterData: any): Promise<any> {
     try {
       const sessionResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions`, {
         method: 'POST',
@@ -47,11 +67,14 @@ export class SeinsightService {
       const sessionData = await sessionResponse.json() as SessionResponse;
       const sessionId = sessionData.sessionId;
 
+      const twitterDataSummary = this.twitterDataParser.formatTwitterDataForAnalysis(twitterData);
+      const signalRequest = Prompts.getSignalGenerationPrompt(twitterDataSummary);
+
       const messageResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          content: `GENERATE_TOP3_SIGNALS: ${businessDescription}`,
+          content: signalRequest,
           metadata: { requestType: "signal-generation", action: "GENERATE_TOP3_SIGNALS" }
         })
       });
@@ -60,7 +83,7 @@ export class SeinsightService {
         throw new Error('Failed to send signal generation message');
       }
 
-      const agentResponse = await this.waitForAgentResponse(sessionId, 60);
+      const agentResponse = await this.waitForAgentResponse(sessionId);
       await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}`, { method: 'DELETE' });
 
       return agentResponse;
@@ -102,7 +125,7 @@ export class SeinsightService {
         throw new Error('Failed to send Twitter collection message');
       }
 
-      const agentResponse = await this.waitForAgentResponse(sessionId, 60);
+      const agentResponse = await this.waitForAgentResponse(sessionId);
       await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}`, { method: 'DELETE' });
 
       return this.twitterDataParser.parseTwitterData(agentResponse, hashtags);
@@ -125,7 +148,7 @@ export class SeinsightService {
       });
 
       if (!sessionResponse.ok) {
-        throw new Error('Failed to create hashtag session');
+        throw new Error('Failed to create session for hashtag generation');
       }
 
       const sessionData = await sessionResponse.json() as SessionResponse;
@@ -135,39 +158,26 @@ export class SeinsightService {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          content: `GENERATE_HASHTAGS: ${businessDescription}`,
+          content: `Generate hashtags for: ${businessDescription}`,
           metadata: { requestType: "hashtag-generation", action: "GENERATE_HASHTAGS" }
         })
       });
 
       if (!messageResponse.ok) {
-        throw new Error('Failed to send message to agent');
+        throw new Error('Failed to send hashtag generation message');
       }
 
-      const agentResponse = await this.waitForAgentResponse(sessionId, 60);
+      const agentResponse = await this.waitForAgentResponse(sessionId);
       await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}`, { method: 'DELETE' });
 
-      const hashtags = agentResponse.match(/#\w+/g) || [];
-      
-      if (hashtags.length > 0) {
-        return hashtags;
-      }
-
-      const allText = agentResponse.toLowerCase();
-      const potentialHashtags = allText.match(/#\w+/g) || [];
-      
-      if (potentialHashtags.length > 0) {
-        return potentialHashtags;
-      }
-
-      throw new Error('No hashtags found in agent response');
+      return this.parseHashtags(agentResponse);
     } catch (error) {
       console.error('Hashtag generation error:', error);
-      throw error;
+      return [];
     }
   }
- 
-  async performCriticalAnalysis(hashtags: string[], businessDescription: string, twitterData: any): Promise<string> {
+
+  async performCriticalAnalysis(twitterData: any): Promise<string> {
     try {
       const sessionResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions`, {
         method: 'POST',
@@ -180,21 +190,21 @@ export class SeinsightService {
       });
 
       if (!sessionResponse.ok) {
-        throw new Error('Failed to create critical analysis session');
+        throw new Error('Failed to create session for critical analysis');
       }
 
       const sessionData = await sessionResponse.json() as SessionResponse;
       const sessionId = sessionData.sessionId;
 
       const twitterDataSummary = this.twitterDataParser.formatTwitterDataForAnalysis(twitterData);
-      const analysisRequest = Prompts.getCriticalAnalysisPrompt(businessDescription, hashtags, twitterDataSummary);
+      const analysisPrompt = Prompts.getCriticalAnalysisPrompt(twitterDataSummary);
 
       const messageResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          content: analysisRequest,
-          metadata: { requestType: "critical-analysis", action: "CRITICAL_ANALYSIS" }
+          content: analysisPrompt,
+          metadata: { requestType: "critical-analysis", action: "PERFORM_CRITICAL_ANALYSIS" }
         })
       });
 
@@ -202,35 +212,41 @@ export class SeinsightService {
         throw new Error('Failed to send critical analysis message');
       }
 
-      const agentResponse = await this.waitForAgentResponse(sessionId, 60);
+      const agentResponse = await this.waitForAgentResponse(sessionId);
       await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}`, { method: 'DELETE' });
 
       return agentResponse;
     } catch (error) {
       console.error('Critical analysis error:', error);
-      return '❌ Error performing critical analysis. Please try again.';
+      return 'Analysis failed. Please try again.';
     }
   }
 
-  private async waitForAgentResponse(sessionId: string, maxAttempts: number): Promise<string> {
-    let attempts = 0;
-    
-    while (attempts < maxAttempts) {
-      attempts++;
-      await this.delay(5000);
-      
+  private async waitForAgentResponse(sessionId: string, maxAttempts: number = 180): Promise<string> {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      await this.delay(1000);
+
       const messagesResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}/messages`);
+      if (!messagesResponse.ok) {
+        continue;
+      }
+
       const messagesData = await messagesResponse.json() as MessagesResponse;
-      
-      if (messagesData.messages && messagesData.messages.length > 0) {
-        for (const msg of messagesData.messages) {
-          if (msg.isAgent && msg.content) {
-            return msg.content;
-          }
+      const agentMessages = messagesData.messages.filter(msg => msg.isAgent);
+
+      if (agentMessages.length > 0) {
+        const lastMessage = agentMessages[agentMessages.length - 1];
+        if (lastMessage.content && lastMessage.content.trim()) {
+          return lastMessage.content;
         }
       }
     }
 
-    throw new Error('Agent did not respond within time limit');
+    throw new Error('Timeout waiting for agent response');
+  }
+
+  private parseHashtags(response: string): string[] {
+    const hashtagMatches = response.match(/#\w+/g);
+    return hashtagMatches ? hashtagMatches.slice(0, 10) : [];
   }
 }

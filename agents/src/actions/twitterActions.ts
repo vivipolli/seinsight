@@ -26,7 +26,7 @@ export const collectTwitterDataAction: Action = {
       
 
       let responseText = `🐦 **Twitter Data Collection Results:**\n\n`;
-      responseText += `**Hashtags from HashtagGenerator:** ${hashtags?.join(', ')}\n`;
+      responseText += `**Search Hashtags Used:** ${hashtags?.join(', ')}\n`;
       responseText += `**Collection Status:** ✅ Completed (Mock Data)\n`;
       responseText += `**Platforms:** Twitter\n\n`;
 

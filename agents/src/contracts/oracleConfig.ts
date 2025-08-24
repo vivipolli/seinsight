@@ -103,7 +103,7 @@ export const ORACLE_ABI = [
 
 // Helper functions
 export const getExplorerUrl = (txHash: string) => 
-  `${ORACLE_CONFIG.network.explorer}/tx/${txHash}`;
+  `${ORACLE_CONFIG.network.explorer}/tx/${txHash}?chain=atlantic-2`;
 
 export const getContractUrl = () => 
-  `${ORACLE_CONFIG.network.explorer}/address/${ORACLE_CONFIG.contractAddress}`;
+  `${ORACLE_CONFIG.network.explorer}/address/${ORACLE_CONFIG.contractAddress}?chain=atlantic-2`;

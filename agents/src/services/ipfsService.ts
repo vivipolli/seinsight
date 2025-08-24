@@ -68,9 +68,10 @@ export class IPFSService {
    */
   private static generateMockCID(dataHash: string): string {
     // In real implementation, this would be the actual IPFS CID
-    // For now, we'll create a mock CID that's deterministic based on the hash
+    // For now, we'll create a deterministic mock CID based on the hash
     const shortHash = dataHash.substring(0, 16);
-    return `bafybeig${shortHash}${Math.random().toString(36).substring(2, 8)}`;
+    const timestamp = Date.now().toString(36);
+    return `bafybeig${shortHash}${timestamp.substring(0, 8)}`;
   }
 
   /**

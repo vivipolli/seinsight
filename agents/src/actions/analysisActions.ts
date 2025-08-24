@@ -1,4 +1,5 @@
 import { Action } from '@elizaos/core';
+import { twitterMockData } from 'src/mocks/twitterMockData';
 
 export const criticalAnalysisAction: Action = {
   name: 'CRITICAL_ANALYSIS',
@@ -10,9 +11,9 @@ export const criticalAnalysisAction: Action = {
 
   handler: async (runtime, message) => {
     try {
-      const content = typeof message.content === 'string' ? message.content : message.content.text || '';
+      const content = twitterMockData.tweets; // TODO: change to the actual twitter data
       
-      const analysisPrompt = `You are a business analyst specializing in Web3 and blockchain markets. Analyze the following business idea with a critical and balanced perspective:
+      const analysisPrompt = `You are a business analyst specializing in Web3 and blockchain markets. Analyze the following Twitter data with a critical and balanced perspective:
 
 ${content}
 

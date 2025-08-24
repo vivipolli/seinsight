@@ -3,15 +3,19 @@ import { Header } from './Header';
 import { InputSection } from './InputSection';
 import { LoadingSection } from './LoadingSection';
 import { ResultsSection } from './ResultsSection';
-import { SeinsightService } from '../services/SeinsightService';
+import { VerificationSection } from './VerificationSection';
+import { ProcessingProgress } from './ProcessingProgress';
+import { SeinsightServiceWithProgressFixed } from '../services/SeinsightService';
+import { useProcessingProgress } from '../hooks/useProcessingProgress';
 import { AnalysisResult } from '../types';
 
 export const SeinsightApp: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { isVisible, currentStep, startProcessing, setStep, completeProcessing, resetProcessing } = useProcessingProgress();
 
-  const seinsightService = new SeinsightService();
+  const seinsightService = new SeinsightServiceWithProgressFixed();
 
   const handleAnalysisSubmit = async (businessDescription: string) => {
     if (!businessDescription.trim()) return;
@@ -19,13 +23,21 @@ export const SeinsightApp: React.FC = () => {
     setIsLoading(true);
     setResults(null);
     setError(null);
+    startProcessing();
 
     try {
-      const analysisResult = await seinsightService.performRealAnalysis(businessDescription);
+      const analysisResult = await seinsightService.performRealAnalysis(
+        businessDescription,
+        (step) => setStep(step)
+      );
       setResults(analysisResult);
+      setTimeout(() => {
+        completeProcessing();
+      }, 1000);
     } catch (err) {
       setError('Error performing analysis. Please try again.');
       console.error('Analysis error:', err);
+      resetProcessing();
     } finally {
       setIsLoading(false);
     }
@@ -47,11 +59,26 @@ export const SeinsightApp: React.FC = () => {
           onClearError={clearError}
         />
         
-        <LoadingSection isVisible={isLoading} />
+        {isVisible ? (
+          <ProcessingProgress 
+            isVisible={isVisible}
+            currentStep={currentStep}
+            onComplete={() => {
+              // Progress will auto-hide after completion
+            }}
+          />
+        ) : (
+          <LoadingSection isVisible={isLoading} />
+        )}
         
         <ResultsSection 
           results={results}
-          isVisible={!!results && !isLoading}
+          isVisible={!!results && !isLoading && !isVisible}
+        />
+        
+        <VerificationSection 
+          results={results}
+          isVisible={!!results && !isLoading && !isVisible}
         />
       </div>
     </div>

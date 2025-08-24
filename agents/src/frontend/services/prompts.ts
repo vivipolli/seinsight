@@ -1,9 +1,27 @@
 export class Prompts {
-  static getCriticalAnalysisPrompt(businessDescription: string, hashtags: string[], twitterDataSummary: string): string {
-    return `CRITICAL_ANALYSIS: Analyze this business idea for Web3 entrepreneurs with a critical and balanced perspective based on the collected Twitter data:
+  static getSignalGenerationPrompt(twitterDataSummary: string): string {
+    return `GENERATE_TOP3_SIGNALS: Based on the Twitter data analysis below, generate the top 3 most relevant market signals for blockchain entrepreneurs:
 
-**Business Context:** ${businessDescription}
-**Target Hashtags:** ${hashtags.join(', ')}
+**Twitter Data Analysis:**
+${twitterDataSummary}
+
+Please generate 3 market signals that:
+1. Are based on the actual Twitter sentiment and discussions
+2. Identify emerging trends or opportunities
+3. Highlight potential market gaps or needs
+4. Consider the community sentiment and engagement levels
+5. Focus on actionable insights for Web3 entrepreneurs
+
+Format each signal as:
+- **Signal Title**: Brief description
+- **Rationale**: Why this signal is important based on the Twitter data
+- **Actionable Insight**: What entrepreneurs should consider
+
+Base your signals ONLY on the Twitter data provided, not on any external knowledge.`;
+  }
+
+  static getCriticalAnalysisPrompt(twitterDataSummary: string): string {
+    return `CRITICAL_ANALYSIS: Analyze the Twitter data below to provide a critical and balanced market analysis for Web3 entrepreneurs:
 
 **Twitter Data Analysis:**
 ${twitterDataSummary}
@@ -51,6 +69,6 @@ Please provide a critical analysis that includes:
    - Resource allocation
    - Timeline considerations
 
-Be objective, data-driven, and base your analysis on the actual Twitter data collected. Focus on actionable insights that help entrepreneurs make informed decisions.`;
+Be objective, data-driven, and base your analysis ONLY on the Twitter data provided. Focus on actionable insights that help entrepreneurs make informed decisions.`;
   }
 }

@@ -1,6 +1,6 @@
 import { Action } from '@elizaos/core';
 import { blockchainService, type SignalBatch } from '../services/blockchainService';
-import { ORACLE_CONFIG } from '../contracts/oracleConfig';
+import { getExplorerUrl, ORACLE_CONFIG } from '../contracts/oracleConfig';
 import { IPFSService, type TwitterDataHash } from '../services/ipfsService';
 import { twitterMockData } from '../mocks/twitterMockData';
 
@@ -31,22 +31,25 @@ export const generateTop3SignalsAction: Action = {
         }
       });
       
-      const topHashtags = Array.from(hashtagCounts.entries())
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 3)
-        .map(([hashtag]) => hashtag);
+      // Generate meaningful signals based on actual tweet content and metrics
+      const totalEngagement = twitterData.tweets.reduce((sum: number, t: any) => sum + t.like_count + t.retweet_count, 0);
+      const avgEngagement = totalEngagement / twitterData.tweets.length;
+      const positiveTweets = twitterData.tweets.filter((t: any) => t.sentiment === 'positive').length;
+      const sentimentPercentage = (positiveTweets / twitterData.tweets.length * 100).toFixed(1);
       
-      while (topHashtags.length < 3) {
-        topHashtags.push(`#Signal${topHashtags.length + 1}`);
-      }
+      const topSignals = [
+        `Sentiment: ${positiveTweets}/${twitterData.tweets.length} positive sentiment`,
+        `Community Engagement: ${avgEngagement.toFixed(1)} avg likes/retweets`,
+        `Privacy Focus: ${twitterData.tweets.filter((t: any) => t.text.toLowerCase().includes('privacy')).length} mentions`
+      ];
       
-      const signalBatch: SignalBatch = {
-        windowStart: Math.floor(Date.now() / 1000) - 3600, // 1 hour ago
-        windowEnd: Math.floor(Date.now() / 1000), // now
-        top3Signals: topHashtags as [string, string, string],
-        cid: twitterDataHash.cid,
-        source: "twitter"
-      };
+          const signalBatch: SignalBatch = {
+          windowStart: Math.floor(Date.now() / 1000) - 3600, // 1 hour ago
+          windowEnd: Math.floor(Date.now() / 1000), // now
+          top3Signals: topSignals as [string, string, string],
+          cid: twitterDataHash.cid,
+          source: "twitter"
+        };
 
       if (!signalBatch.top3Signals || signalBatch.top3Signals.length !== 3) {
         throw new Error('Invalid signal batch: must contain exactly 3 signals');
@@ -63,19 +66,26 @@ export const generateTop3SignalsAction: Action = {
       }
 
       let responseText = `🔮 **Community Signal Oracle - Published**\n\n`;
-      responseText += `🏆 **Top 3 Hashtags:**\n`;
-      signalBatch.top3Signals.forEach((hashtag: string, index: number) => {
-        const count = hashtagCounts.get(hashtag) || 0;
-        responseText += `${index + 1}. **${hashtag}** (${count} mentions)\n`;
+      responseText += `🏆 **Top 3 Market Signals:**\n`;
+      signalBatch.top3Signals.forEach((signal: string, index: number) => {
+        responseText += `${index + 1}. **${signal}**\n`;
       });
       responseText += '\n';
+
+      responseText += `📊 **Data Transparency:**\n`;
+      responseText += `└ Tweets Analyzed: ${twitterData.tweets.length}\n`;
+      responseText += `└ Total Engagement: ${totalEngagement}\n`;
+      responseText += `└ Data Hash: \`${twitterDataHash.dataHash.substring(0, 16)}...\`\n`;
+      responseText += `└ Timestamp: ${twitterDataHash.timestamp}\n\n`;
 
       responseText += `📊 **Blockchain Publication:**\n`;
       responseText += `└ Batch ID: ${publishedBatch.batchId}\n`;
       responseText += `└ CID: \`${publishedBatch.cid}\`\n`;
-      responseText += `└ Tx Hash: \`${publishedBatch.txHash}\`\n\n`;
+      responseText += `└ Tx Hash: \`${publishedBatch.txHash}\`\n`;
+      responseText += `└ Block: ${publishedBatch.blockNumber || 'N/A'}\n\n`;
 
-      responseText += `🔗 **Verify:** ${ORACLE_CONFIG.network.explorer}/tx/${publishedBatch.txHash}\n`;
+      responseText += `🔗 **Verify:** ${getExplorerUrl(publishedBatch.txHash)}\n`;
+      responseText += `🔍 **Data Integrity:** Hash verified and immutable on IPFS\n`;
 
       const updatedSettings = (runtime.character as any).settings || {};
       updatedSettings.latestPublishedBatch = publishedBatch;

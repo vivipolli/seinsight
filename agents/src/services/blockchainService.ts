@@ -1,4 +1,4 @@
-import { ORACLE_CONFIG, ORACLE_ABI } from '../contracts/oracleConfig';
+import { ORACLE_CONFIG, ORACLE_ABI, getExplorerUrl } from '../contracts/oracleConfig';
 
 // Types
 export interface SignalBatch {
@@ -15,6 +15,7 @@ export interface PublishedBatch extends SignalBatch {
   publishedAt: number;
   verified: boolean;
   txHash?: string;
+  blockNumber?: number;
 }
 
 // Blockchain Service Class
@@ -88,7 +89,8 @@ export class BlockchainService {
         publisher: wallet.address,
         publishedAt: Math.floor(Date.now() / 1000),
         verified: false,
-        txHash: tx.hash
+        txHash: tx.hash,
+        blockNumber: receipt.blockNumber
       };
 
       console.log('✅ Signal batch published successfully!');
@@ -96,7 +98,7 @@ export class BlockchainService {
       console.log('├── Tx Hash:', tx.hash);
       console.log('├── Block:', receipt.blockNumber);
       console.log('├── Gas Used:', receipt.gasUsed.toString());
-      console.log('└── Explorer:', `${ORACLE_CONFIG.network.explorer}/tx/${tx.hash}`);
+      console.log('└── Explorer:', getExplorerUrl(tx.hash));
 
       return publishedBatch;
     } catch (error) {
