@@ -1,0 +1,22 @@
+name: seinsight-eliza-agent
+services:
+  - name: eliza-agent
+    source_dir: /
+    github:
+      repo: your-username/sei-growth
+      branch: main
+    run_command: elizaos start
+    environment_slug: node-js
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: OPENAI_API_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      - key: PGLITE_DATA_DIR
+        value: /app/.eliza/.elizadb
+      - key: PRIVATE_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET

@@ -17,7 +17,10 @@ export default defineConfig({
         main: path.resolve(__dirname, 'src/frontend/index.html'),
       },
     },
+    assetsDir: 'assets',
+    copyPublicDir: true,
   },
+  publicDir: 'public',
   optimizeDeps: {
     include: ['react', 'react-dom', '@tanstack/react-query'],
   },

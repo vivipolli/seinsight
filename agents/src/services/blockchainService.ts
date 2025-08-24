@@ -39,12 +39,6 @@ export class BlockchainService {
         throw new Error('Private key not configured in environment');
       }
 
-      console.log('📡 Publishing signal batch to Sei Oracle...');
-      console.log('├── Contract:', this.contractAddress);
-      console.log('├── Signals:', batch.top3Signals.join(', '));
-      console.log('├── CID:', batch.cid);
-      console.log('└── Window:', new Date(batch.windowStart * 1000).toISOString(), 'to', new Date(batch.windowEnd * 1000).toISOString());
-
       // Real implementation with ethers.js
       const { ethers } = await import('ethers');
       const provider = new ethers.JsonRpcProvider(this.rpcUrl);
@@ -54,12 +48,8 @@ export class BlockchainService {
       const wallet = new ethers.Wallet(privateKeyWithPrefix, provider);
       const contract = new ethers.Contract(this.contractAddress, ORACLE_ABI, wallet);
       
-      console.log('🔑 Using wallet:', wallet.address);
-      
       // Check balance
       const balance = await provider.getBalance(wallet.address);
-      console.log('💰 Wallet balance:', ethers.formatEther(balance), 'SEI');
-      console.log('💰 Balance in wei:', balance.toString());
       
       if (balance < ethers.parseEther('0.01')) {
         throw new Error('Insufficient SEI balance for transaction');
@@ -73,9 +63,6 @@ export class BlockchainService {
         batch.cid,
         batch.source
       );
-      
-      console.log('⏳ Transaction sent:', tx.hash);
-      console.log('⏳ Waiting for confirmation...');
       
       const receipt = await tx.wait();
       
@@ -93,13 +80,6 @@ export class BlockchainService {
         blockNumber: receipt.blockNumber
       };
 
-      console.log('✅ Signal batch published successfully!');
-      console.log('├── Batch ID:', batchId);
-      console.log('├── Tx Hash:', tx.hash);
-      console.log('├── Block:', receipt.blockNumber);
-      console.log('├── Gas Used:', receipt.gasUsed.toString());
-      console.log('└── Explorer:', getExplorerUrl(tx.hash));
-
       return publishedBatch;
     } catch (error) {
       console.error('❌ Failed to publish signal batch:', error);
@@ -112,16 +92,12 @@ export class BlockchainService {
    */
   async getLatestSignals(): Promise<{ signals: string[], cid: string, timestamp: number } | null> {
     try {
-      console.log('🔍 Fetching latest signals from contract...');
-      
       const { ethers } = await import('ethers');
       const provider = new ethers.JsonRpcProvider(this.rpcUrl);
       const contract = new ethers.Contract(this.contractAddress, ORACLE_ABI, provider);
       
       // Call getLatestSignals function
       const [signals, cid, windowEnd] = await contract.getLatestSignals();
-      
-      console.log('✅ Latest signals retrieved:', signals);
       
       return { 
         signals: Array.from(signals), 

@@ -18,7 +18,7 @@ export const generateHashtagsAction: Action = {
       const prompt = [
         'You are an AI that generates up to 10 business-relevant hashtags from the following report.',
         'Rules:',
-        '- Return ONLY the hashtags, comma-separated, no spaces, no extra text',
+        '- Return ONLY hashtags, comma-separated, no extra text',
         '- Use # prefix, alphanumeric characters only',
         '- Maximum of 10 hashtags',
         '',
@@ -66,8 +66,7 @@ export const generateHashtagsAction: Action = {
         unique.forEach(h => {
           responseText += `${h}\n`;
         });
-        responseText += `\n📊 Count: ${unique.length} (max 3)`;
-        responseText += `\n💾 Saved to database for sharing with other agents`;
+        responseText += `\n📊 Count: ${unique.length}`;
 
         console.log('🔍 Returning response:', responseText);
         return { success: true, text: responseText };

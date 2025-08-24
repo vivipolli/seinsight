@@ -1,6 +1,5 @@
-import { Action, IAgentRuntime, Memory } from '@elizaos/core';
+import { Action } from '@elizaos/core';
 import { twitterMockData } from '../mocks/twitterMockData.js';
-import hashtagsProvider from '../providers/keywords-generator';
 
 export const collectTwitterDataAction: Action = {
   name: 'COLLECT_TWITTER_DATA',
@@ -10,10 +9,8 @@ export const collectTwitterDataAction: Action = {
 
   handler: async (runtime, message) => {
     try {
-      console.log('🐦 collectTwitterDataAction triggered!');
       const content = typeof message.content === 'string' ? message.content : JSON.stringify(message.content);
       const hashtags = content?.split(' ').filter(word => word.startsWith('#'));     
-
 
       // In production, we would use the hashtags from the hashtagsProvider to collect twitter data
       // For now, we use mock data
@@ -24,21 +21,10 @@ export const collectTwitterDataAction: Action = {
       const totalRetweets = mockTweets.reduce((sum, tweet) => sum + tweet.retweet_count, 0);
       const totalEngagement = totalLikes + totalRetweets;
       
-
-      let responseText = `🐦 **Twitter Data Collection Results:**\n\n`;
-      responseText += `**Search Hashtags Used:** ${hashtags?.join(', ')}\n`;
-      responseText += `**Collection Status:** ✅ Completed (Mock Data)\n`;
-      responseText += `**Platforms:** Twitter\n\n`;
-
-      responseText += `📊 **Twitter Data Summary:**\n`;
-      responseText += `└ Posts Collected: ${mockTweets.length}\n`;
-      responseText += `└ Total Engagement: ${totalEngagement} (${totalLikes} likes, ${totalRetweets} retweets)\n`;
-      responseText += `└ Time Range: Last 24 hours\n\n`;
-
-      responseText += `\n📈 **Next Step:** Use "generate top 3 signals" to publish trending signals to the oracle.`;
-
-
-      console.log('🐦 Sending Twitter data response via callback:', responseText);
+      let responseText = `🐦 Twitter Data Collected\n\n`;
+      responseText += `Posts: ${mockTweets.length}\n`;
+      responseText += `Engagement: ${totalEngagement}\n`;
+      responseText += `Hashtags: ${hashtags?.join(', ')}\n`;
 
       return { 
         success: true, 

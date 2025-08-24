@@ -14,8 +14,6 @@ export class IPFSService {
    */
   static async hashAndUploadTwitterData(twitterData: any): Promise<TwitterDataHash> {
     try {
-      console.log('🔐 Generating hash from Twitter data...');
-      
       // Create a clean data object for hashing (remove sensitive fields)
       const cleanData = {
         tweets: twitterData.tweets.map((tweet: any) => ({
@@ -37,10 +35,6 @@ export class IPFSService {
       const dataString = JSON.stringify(cleanData, null, 0);
       const dataHash = crypto.createHash('sha256').update(dataString).digest('hex');
       
-      console.log('📊 Data hash generated:', dataHash.substring(0, 16) + '...');
-      console.log('📊 Tweet count:', cleanData.tweets.length);
-      console.log('📊 Total engagement:', cleanData.totalEngagement);
-
       // Simulate IPFS upload (in real implementation, this would upload to IPFS)
       const cid = this.generateMockCID(dataHash);
       
@@ -51,10 +45,6 @@ export class IPFSService {
         tweetCount: cleanData.tweets.length,
         totalEngagement: cleanData.totalEngagement
       };
-
-      console.log('📤 Simulated IPFS upload completed');
-      console.log('🔗 CID:', cid);
-      console.log('⏰ Timestamp:', new Date(result.timestamp * 1000).toISOString());
 
       return result;
     } catch (error) {

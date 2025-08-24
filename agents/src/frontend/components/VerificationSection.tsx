@@ -6,20 +6,15 @@ interface VerificationSectionProps {
 }
 
 export const VerificationSection: React.FC<VerificationSectionProps> = ({ results, isVisible }) => {
-  console.log('VerificationSection render:', { isVisible, hasResults: !!results, hasSignals: !!results?.signalsResult });
-  
   if (!isVisible || !results) {
-    console.log('VerificationSection not visible or no results');
     return null;
   }
 
   const handleVerifyData = async () => {
     if (results.signalsResult) {
-      // Extract verification info from the signals result
       const verificationInfo = extractVerificationInfo(results.signalsResult);
       
       if (verificationInfo) {
-        // Open verification details
         alert(`🔍 Verification Details:\n\n` +
               `📊 Tweets Analyzed: ${verificationInfo.tweetCount}\n` +
               `📈 Sentiment: ${verificationInfo.sentiment} (${verificationInfo.sentimentScore})\n` +
@@ -38,8 +33,6 @@ export const VerificationSection: React.FC<VerificationSectionProps> = ({ result
   };
 
   const extractVerificationInfo = (signalsResult: string) => {
-    console.log('Extracting from signals result:', signalsResult);
-    
     // Extract verification data from the signals result text
     // Extract from the actual oracle response format
     const tweetCountMatch = signalsResult.match(/Tweets Analyzed: (\d+)/);
@@ -50,17 +43,6 @@ export const VerificationSection: React.FC<VerificationSectionProps> = ({ result
     const totalEngagementMatch = signalsResult.match(/Total Engagement: (\d+)/);
     const dataHashMatch = signalsResult.match(/Data Hash: `([a-f0-9]{16})\.\.\.`/);
     const verifyUrlMatch = signalsResult.match(/Verify: (https:\/\/[^\s]+)/);
-
-    console.log('Matches found:', { 
-      tweetCountMatch, 
-      txHashMatch, 
-      cidMatch, 
-      batchIdMatch, 
-      totalEngagementMatch,
-      dataHashMatch,
-      verifyUrlMatch,
-      blockMatch 
-    });
 
     if (tweetCountMatch) {
       return {
@@ -82,8 +64,6 @@ export const VerificationSection: React.FC<VerificationSectionProps> = ({ result
   };
 
   const verificationInfo = results.signalsResult ? extractVerificationInfo(results.signalsResult) : null;
-
-  console.log('Verification info extracted:', verificationInfo);
 
   return (
     <div style={styles.verificationSection}>

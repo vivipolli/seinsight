@@ -20,9 +20,8 @@ const initKeywordsGenerator = async ({ runtime }: { runtime: IAgentRuntime }) =>
   // Wait a bit for database to be available and create table
   setTimeout(async () => {
     try {
-      logger.info('🔍 Attempting to create hashtags table...');
+      logger.info('🔍 Creating hashtags table...');
       
-      // Use the database adapter directly
       const adapter = (runtime as any).databaseAdapter || (runtime as any).adapter;
       if (adapter && adapter.db) {
         await adapter.db.execute(`

@@ -17,9 +17,12 @@ export const SeinsightApp: React.FC = () => {
 
   const seinsightService = new SeinsightServiceWithProgressFixed();
 
-  const handleAnalysisSubmit = async (businessDescription: string) => {
-    if (!businessDescription.trim()) return;
+  const [isProcessing, setIsProcessing] = useState(false);
 
+  const handleAnalysisSubmit = async (businessDescription: string) => {
+    if (!businessDescription.trim() || isProcessing) return;
+
+    setIsProcessing(true);
     setIsLoading(true);
     setResults(null);
     setError(null);
@@ -40,6 +43,7 @@ export const SeinsightApp: React.FC = () => {
       resetProcessing();
     } finally {
       setIsLoading(false);
+      setIsProcessing(false);
     }
   };
 

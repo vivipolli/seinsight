@@ -1,5 +1,5 @@
 import { Action } from '@elizaos/core';
-import { twitterMockData } from 'src/mocks/twitterMockData';
+import { twitterMockData } from '../mocks/twitterMockData.js';
 
 export const criticalAnalysisAction: Action = {
   name: 'CRITICAL_ANALYSIS',
@@ -13,51 +13,18 @@ export const criticalAnalysisAction: Action = {
     try {
       const content = twitterMockData.tweets; // TODO: change to the actual twitter data
       
-      const analysisPrompt = `You are a business analyst specializing in Web3 and blockchain markets. Analyze the following Twitter data with a critical and balanced perspective:
+      const analysisPrompt = `Analyze this Twitter data for Web3 market insights. Focus on key risks, opportunities, and actionable recommendations. Be concise and objective.
 
-${content}
+      Data: ${JSON.stringify(content).substring(0, 1000)}
 
-Provide a comprehensive analysis that includes:
+      Provide:
+      1. Main risks and challenges
+      2. Key opportunities 
+      3. Strategic recommendations
 
-1. **Market Risks and Challenges**
-   - Regulatory uncertainties
-   - Technical complexity
-   - Market volatility
-   - Competition analysis
+      Keep analysis under 200 words.`;
 
-2. **Potential Obstacles and Limitations**
-   - Scalability issues
-   - User adoption challenges
-   - Resource requirements
-   - Technology dependencies
-
-3. **Competitive Landscape Considerations**
-   - Existing solutions
-   - Market saturation
-   - Differentiation challenges
-   - Entry barriers
-
-4. **Realistic Opportunities** (not overly optimistic)
-   - Valid use cases
-   - Market gaps
-   - Partnership potential
-   - Revenue streams
-
-5. **Potential Failure Points to Watch For**
-   - Common pitfalls
-   - Risk factors
-   - Warning signs
-   - Mitigation strategies
-
-6. **Balanced Recommendations**
-   - Strategic approach
-   - Risk management
-   - Resource allocation
-   - Timeline considerations
-
-Be objective, data-driven, and avoid overly positive bias. Focus on actionable insights that help entrepreneurs make informed decisions.`;
-
-      const response = await runtime.useModel('TEXT_LARGE', {
+      const response = await runtime.useModel('TEXT_SMALL', {
         prompt: analysisPrompt
       });
 

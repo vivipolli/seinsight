@@ -14,7 +14,6 @@ export const generateTop3SignalsAction: Action = {
 
   handler: async (runtime, message) => {
     try {
-      console.log('🔮 generateTop3SignalsAction triggered!');
       
       // TODO: Remove this once we have real data and use provider to get twitter data
       let twitterData = twitterMockData;
@@ -35,7 +34,7 @@ export const generateTop3SignalsAction: Action = {
       const totalEngagement = twitterData.tweets.reduce((sum: number, t: any) => sum + t.like_count + t.retweet_count, 0);
       const avgEngagement = totalEngagement / twitterData.tweets.length;
       const positiveTweets = twitterData.tweets.filter((t: any) => t.sentiment === 'positive').length;
-      const sentimentPercentage = (positiveTweets / twitterData.tweets.length * 100).toFixed(1);
+
       
       const topSignals = [
         `Sentiment: ${positiveTweets}/${twitterData.tweets.length} positive sentiment`,
@@ -65,34 +64,23 @@ export const generateTop3SignalsAction: Action = {
         throw new Error('Publication failed: missing transaction hash or batch ID');
       }
 
-      let responseText = `🔮 **Community Signal Oracle - Published**\n\n`;
-      responseText += `🏆 **Top 3 Market Signals:**\n`;
+      let responseText = `🔮 Signals Published\n\n`;
+      responseText += `Top 3 Signals:\n`;
       signalBatch.top3Signals.forEach((signal: string, index: number) => {
-        responseText += `${index + 1}. **${signal}**\n`;
+        responseText += `${index + 1}. ${signal}\n`;
       });
       responseText += '\n';
 
-      responseText += `📊 **Data Transparency:**\n`;
-      responseText += `└ Tweets Analyzed: ${twitterData.tweets.length}\n`;
-      responseText += `└ Total Engagement: ${totalEngagement}\n`;
-      responseText += `└ Data Hash: \`${twitterDataHash.dataHash.substring(0, 16)}...\`\n`;
-      responseText += `└ Timestamp: ${twitterDataHash.timestamp}\n\n`;
-
-      responseText += `📊 **Blockchain Publication:**\n`;
-      responseText += `└ Batch ID: ${publishedBatch.batchId}\n`;
-      responseText += `└ CID: \`${publishedBatch.cid}\`\n`;
-      responseText += `└ Tx Hash: \`${publishedBatch.txHash}\`\n`;
-      responseText += `└ Block: ${publishedBatch.blockNumber || 'N/A'}\n\n`;
-
-      responseText += `🔗 **Verify:** ${getExplorerUrl(publishedBatch.txHash)}\n`;
-      responseText += `🔍 **Data Integrity:** Hash verified and immutable on IPFS\n`;
+      responseText += `Data: ${twitterData.tweets.length} tweets, ${totalEngagement} engagement\n`;
+      responseText += `Hash: ${twitterDataHash.dataHash.substring(0, 16)}...\n`;
+      responseText += `Batch ID: ${publishedBatch.batchId}\n`;
+      responseText += `Tx: ${publishedBatch.txHash}\n`;
+      responseText += `Verify: ${getExplorerUrl(publishedBatch.txHash)}`;
 
       const updatedSettings = (runtime.character as any).settings || {};
       updatedSettings.latestPublishedBatch = publishedBatch;
       updatedSettings.latestSignals = signalBatch.top3Signals;
       (runtime.character as any).settings = updatedSettings;
-
-      console.log('🔮 generateTop3SignalsAction completed successfully', responseText);
 
       return { success: true, text: responseText };
     } catch (error) {
