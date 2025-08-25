@@ -221,6 +221,15 @@ Our AI agents create a **bridge between social media conversations and SEI block
 3. **⛓️ Blockchain Publication**: Verified signals are published to SEI oracle
 4. **🔐 Immutable Storage**: All data becomes permanently verifiable on-chain
 
+### **Smart Contract Integration**
+
+Our `CommunitySignalOracle` smart contract stores market signals permanently on SEI:
+
+- **Oracle Agent** publishes top 3 market signals to the blockchain
+- **IPFS Storage** links raw Twitter data to blockchain records
+- **Public Verification** allows anyone to verify signal authenticity
+- **Historical Data** provides complete market intelligence timeline
+
 ### **SEI's Critical Role in Our Product**
 
 **SEI Network serves as the foundation for our market intelligence platform:**

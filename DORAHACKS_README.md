@@ -29,6 +29,24 @@ SEI's **1-second finality** and **ultra-low fees** make it perfect for real-time
 
 ## ⛓️ SEI Integration & Utility
 
+### **Why Blockchain for Social Media Data?**
+
+**The Problem with Traditional Social Media Analytics:**
+
+❌ **Ephemeral Data**: Social media posts disappear, get deleted, or become inaccessible  
+❌ **No Trust**: Anyone can claim "the community said X" without proof  
+❌ **Centralized Control**: Platforms can manipulate or hide data  
+❌ **No Historical Record**: Can't verify what was trending last week/month  
+❌ **Fake News**: No way to verify if sentiment analysis is based on real data  
+
+**Blockchain Solves These Problems:**
+
+✅ **Immutable Records**: Once published, market signals can never be altered or deleted  
+✅ **Public Verification**: Anyone can verify the original data and analysis  
+✅ **Decentralized**: No single entity controls the market intelligence  
+✅ **Historical Timeline**: Complete record of market sentiment over time  
+✅ **Trust Layer**: Cryptographic proof that data is authentic  
+
 ### **How Our AI Agents Integrate with SEI**
 
 Our AI agents create a **bridge between social media conversations and SEI blockchain** through a sophisticated integration pipeline:
@@ -38,6 +56,22 @@ Our AI agents create a **bridge between social media conversations and SEI block
 3. **⛓️ Blockchain Publication**: Verified signals are published to SEI oracle
 4. **🔐 Immutable Storage**: All data becomes permanently verifiable on-chain
 
+### **Real-World Use Cases**
+
+**For Entrepreneurs:**
+- "Prove to investors that community sentiment supports your idea"
+- "Show historical data that your market timing is right"
+- "Verify that your product addresses real community needs"
+
+**For Investors:**
+- "Verify market signals before making investment decisions"
+- "Track sentiment changes over time for due diligence"
+- "Prove your investment thesis with immutable data"
+
+**For the Community:**
+- "Hold platforms accountable for data manipulation"
+- "Create permanent records of community sentiment"
+- "Build trust through transparent market intelligence"
 
 ### **Technical Integration Points**
 

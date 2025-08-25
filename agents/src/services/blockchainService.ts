@@ -64,11 +64,21 @@ export class BlockchainService {
         batch.source
       );
       
+      console.log('🔗 Blockchain: Transaction sent, hash:', tx.hash);
+      console.log('🔗 Blockchain: Waiting for confirmation...');
+      
       const receipt = await tx.wait();
+      console.log('🔗 Blockchain: Transaction confirmed in block:', receipt.blockNumber);
       
       // Extract batch ID from event logs
       const event = receipt.logs.find((log: any) => log.fragment?.name === 'SignalBatchPublished');
-      const batchId = event ? Number(event.args[0]) : Math.floor(Math.random() * 1000) + 1;
+      
+      if (!event) {
+        throw new Error('Transaction succeeded but SignalBatchPublished event not found');
+      }
+      
+      const batchId = Number(event.args[0]);
+      console.log('🔗 Blockchain: Batch ID extracted:', batchId);
       
       const publishedBatch: PublishedBatch = {
         ...batch,
@@ -80,6 +90,7 @@ export class BlockchainService {
         blockNumber: receipt.blockNumber
       };
 
+      console.log('🔗 Blockchain: Publication completed successfully!');
       return publishedBatch;
     } catch (error) {
       console.error('❌ Failed to publish signal batch:', error);

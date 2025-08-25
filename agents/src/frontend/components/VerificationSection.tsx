@@ -41,7 +41,7 @@ export const VerificationSection: React.FC<VerificationSectionProps> = ({ result
     const totalEngagementMatch = signalsResult.match(/Data: \d+ tweets, (\d+) engagement/);
     const dataHashMatch = signalsResult.match(/Hash: ([a-f0-9]{16})\.\.\./);
     const batchIdMatch = signalsResult.match(/Batch ID: (\d+)/);
-    const txHashMatch = signalsResult.match(/Tx: ([a-f0-9x]{64})/);
+    const txHashMatch = signalsResult.match(/Tx: (0x[a-f0-9]{64})/);
     const verifyUrlMatch = signalsResult.match(/Verify: (https:\/\/[^\s]+)/);
 
     console.log('🔍 Debug: Regex matches:');
@@ -154,7 +154,7 @@ export const VerificationSection: React.FC<VerificationSectionProps> = ({ result
           
           {verificationInfo && verificationInfo.txHash !== 'N/A' && (
             <a 
-              href={`https://seitrace.com/tx/${verificationInfo.txHash}?chain=atlantic-2`}
+              href={`https://testnet.seiscan.io/search?q=${verificationInfo.txHash}`}
               target="_blank"
               rel="noopener noreferrer"
               style={styles.explorerButton}
