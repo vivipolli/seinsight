@@ -53,6 +53,7 @@ const initTwitterCollector = ({ runtime }: { runtime: IAgentRuntime }) => {
 const initInsightsCompiler = ({ runtime }: { runtime: IAgentRuntime }) => {
   logger.info('Initializing InsightsCompiler agent');
   logger.info({ name: insightsCompilerAgent.name }, 'Name:');
+  logger.info('InsightsCompiler Agent ID:', (runtime as any).agentId || 'unknown');
 };
 
 const initOracleAgent = ({ runtime }: { runtime: IAgentRuntime }) => {

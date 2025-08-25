@@ -1,6 +1,9 @@
 import { Action } from '@elizaos/core';
 import { twitterMockData } from '../mocks/twitterMockData.js';
 
+// TODO: This is a temporary action to test the critical analysis.
+// In the future, we will use the actual twitter data and the actual insights compiler agent.
+
 export const criticalAnalysisAction: Action = {
   name: 'CRITICAL_ANALYSIS',
   description: 'Perform critical analysis of business ideas with balanced perspective',

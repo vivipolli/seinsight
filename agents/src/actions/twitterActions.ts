@@ -1,6 +1,10 @@
 import { Action } from '@elizaos/core';
 import { twitterMockData } from '../mocks/twitterMockData.js';
 
+// This is a simulation of the Twitter data collection action.
+// In production, we would use the hashtags from the hashtagsProvider to collect twitter data
+// For now, we use mock data
+
 export const collectTwitterDataAction: Action = {
   name: 'COLLECT_TWITTER_DATA',
   description: 'Collect Twitter data using hashtags and topics for analysis',

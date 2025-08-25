@@ -1,8 +1,40 @@
-import { Action } from '@elizaos/core';
+import { Action, ModelType } from '@elizaos/core';
 import { blockchainService, type SignalBatch } from '../services/blockchainService';
 import { getExplorerUrl, ORACLE_CONFIG } from '../contracts/oracleConfig';
 import { IPFSService, type TwitterDataHash } from '../services/ipfsService';
 import { twitterMockData } from '../mocks/twitterMockData.js';
+
+// Contract validation function
+const validateSignalBatch = (signalBatch: SignalBatch): void => {
+  const now = Math.floor(Date.now() / 1000);
+  
+  // Contract validations from CommunitySignalOracle.sol
+  if (signalBatch.windowStart >= signalBatch.windowEnd) {
+    throw new Error('Invalid time window: windowStart must be before windowEnd');
+  }
+  
+  if (signalBatch.windowEnd > now) {
+    throw new Error('Window end cannot be in the future');
+  }
+  
+  if (!signalBatch.cid || signalBatch.cid.length === 0) {
+    throw new Error('CID cannot be empty');
+  }
+  
+  if (!signalBatch.top3Signals || signalBatch.top3Signals.length !== 3) {
+    throw new Error('Must have exactly 3 signals');
+  }
+  
+  for (let i = 0; i < 3; i++) {
+    if (!signalBatch.top3Signals[i] || signalBatch.top3Signals[i].length === 0) {
+      throw new Error(`Signal ${i + 1} cannot be empty`);
+    }
+  }
+  
+  if (!signalBatch.source || signalBatch.source.length === 0) {
+    throw new Error('Source cannot be empty');
+  }
+};
 
 export const generateTop3SignalsAction: Action = {
   name: 'GENERATE_TOP3_SIGNALS',
@@ -12,7 +44,7 @@ export const generateTop3SignalsAction: Action = {
     return true;
   },
 
-  handler: async (runtime, message) => {
+  handler: async (runtime, message, state, options, callback) => {
     try {
       
       // TODO: Remove this once we have real data and use provider to get twitter data
@@ -42,13 +74,15 @@ export const generateTop3SignalsAction: Action = {
         `Privacy Focus: ${twitterData.tweets.filter((t: any) => t.text.toLowerCase().includes('privacy')).length} mentions`
       ];
       
-          const signalBatch: SignalBatch = {
-          windowStart: Math.floor(Date.now() / 1000) - 3600, // 1 hour ago
-          windowEnd: Math.floor(Date.now() / 1000), // now
-          top3Signals: topSignals as [string, string, string],
-          cid: twitterDataHash.cid,
-          source: "twitter"
-        };
+      const signalBatch: SignalBatch = {
+        windowStart: Math.floor(Date.now() / 1000) - 7200, 
+        windowEnd: Math.floor(Date.now() / 1000) - 60, // 1 minute ago (ensure it's in the past)
+        top3Signals: topSignals as [string, string, string],
+        cid: twitterDataHash.cid,
+        source: "twitter"
+      };
+
+      validateSignalBatch(signalBatch);
 
       if (!signalBatch.top3Signals || signalBatch.top3Signals.length !== 3) {
         throw new Error('Invalid signal batch: must contain exactly 3 signals');
@@ -64,26 +98,44 @@ export const generateTop3SignalsAction: Action = {
         throw new Error('Publication failed: missing transaction hash or batch ID');
       }
 
-      let responseText = `🔮 Signals Published\n\n`;
-      responseText += `Top 3 Signals:\n`;
-      signalBatch.top3Signals.forEach((signal: string, index: number) => {
-        responseText += `${index + 1}. ${signal}\n`;
-      });
-      responseText += '\n';
+      const oraclePrompt = `You are a blockchain oracle agent. Format the following blockchain transaction data into a clear verification response.
 
-      responseText += `Data: ${twitterData.tweets.length} tweets, ${totalEngagement} engagement\n`;
-      responseText += `Hash: ${twitterDataHash.dataHash.substring(0, 16)}...\n`;
-      responseText += `Batch ID: ${publishedBatch.batchId}\n`;
-      responseText += `Tx: ${publishedBatch.txHash}\n`;
-      responseText += `Verify: ${getExplorerUrl(publishedBatch.txHash)}`;
+        Blockchain Data:
+        - Tweet Count: ${twitterData.tweets.length}
+        - Total Engagement: ${totalEngagement}
+        - Data Hash: ${twitterDataHash.dataHash.substring(0, 16)}...
+        - Batch ID: ${publishedBatch.batchId}
+        - Transaction Hash: ${publishedBatch.txHash}
+        - Verify URL: ${getExplorerUrl(publishedBatch.txHash)}
+
+        Format the response exactly as:
+        🔮 Blockchain Verification Data
+
+        Data: [tweet count] tweets, [engagement] engagement
+        Hash: [first 16 chars of hash]...
+        Batch ID: [batch id]
+        Tx: [transaction hash]
+        Verify: [verify url]
+
+        Return ONLY this formatted response, no additional text.`;
+
+      const formattedResponse = await runtime.useModel(ModelType.TEXT_LARGE, {
+        prompt: oraclePrompt
+      });
 
       const updatedSettings = (runtime.character as any).settings || {};
       updatedSettings.latestPublishedBatch = publishedBatch;
       updatedSettings.latestSignals = signalBatch.top3Signals;
       (runtime.character as any).settings = updatedSettings;
 
-      return { success: true, text: responseText };
+      await callback?.({
+        text: formattedResponse,
+        source: message.content.source,
+      });
+
+      return { success: true, text: formattedResponse };
     } catch (error) {
+      console.error('🔮 Oracle Action: Error occurred:', error);
       return { success: false, text: '❌ Error generating top 3 signals. Please try again.' };
     }
   }

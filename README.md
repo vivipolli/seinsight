@@ -203,3 +203,43 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 [![SEI Network](https://img.shields.io/badge/Powered%20by-SEI%20Network-blue?style=for-the-badge)](https://sei.io/)
 [![AI Powered](https://img.shields.io/badge/AI-Powered-OpenAI-orange?style=for-the-badge)](https://openai.com/)
+
+### **Why SEI Blockchain?**
+
+SEI's **1-second finality** and **ultra-low fees** make it perfect for real-time market signals. Traditional oracles are too slow and expensive for live market intelligence. SEI enables us to publish signals as fast as conversations happen.
+
+---
+
+## ⛓️ SEI Integration & Utility
+
+### **How Our AI Agents Integrate with SEI**
+
+Our AI agents create a **bridge between social media conversations and SEI blockchain** through a sophisticated integration pipeline:
+
+1. **🔍 Data Collection**: AI agents analyze Twitter conversations in real-time
+2. **🧠 Signal Processing**: Natural language processing extracts market insights
+3. **⛓️ Blockchain Publication**: Verified signals are published to SEI oracle
+4. **🔐 Immutable Storage**: All data becomes permanently verifiable on-chain
+
+### **SEI's Critical Role in Our Product**
+
+**SEI Network serves as the foundation for our market intelligence platform:**
+
+- **🚀 Real-Time Oracle**: SEI's 1-second finality enables instant signal publication
+- **💰 Cost-Effective**: Ultra-low fees allow high-frequency market updates
+- **🔒 Trust Layer**: Blockchain immutability ensures data integrity
+- **🌐 Decentralized**: No single point of failure for market intelligence
+- **📊 Transparent**: All signals publicly verifiable on SEI explorer
+
+### **Technical Integration Points**
+
+| Component | SEI Integration | Purpose |
+|-----------|----------------|---------|
+| **Oracle Contract** | Smart contract on SEI | Stores market signals permanently |
+| **IPFS Storage** | CID references on SEI | Links to raw social media data |
+| **Transaction Verification** | SEI explorer integration | Public verification of all signals |
+| **Real-Time Updates** | SEI's fast finality | Instant market intelligence |
+
+**SEI transforms our AI analysis from ephemeral insights into permanent, verifiable market intelligence that anyone can trust and build upon.**
+
+---

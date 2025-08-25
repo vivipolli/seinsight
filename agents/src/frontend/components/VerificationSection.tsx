@@ -33,25 +33,33 @@ export const VerificationSection: React.FC<VerificationSectionProps> = ({ result
   };
 
   const extractVerificationInfo = (signalsResult: string) => {
+    console.log('🔍 Debug: extractVerificationInfo called with:', signalsResult);
+    
     // Extract verification data from the signals result text
-    // Extract from the actual oracle response format
-    const tweetCountMatch = signalsResult.match(/Tweets Analyzed: (\d+)/);
-    const txHashMatch = signalsResult.match(/Tx Hash: `([a-f0-9x]{64})`/);
-    const cidMatch = signalsResult.match(/CID: `([a-zA-Z0-9]+)`/);
+    // Format: Data: X tweets, Y engagement\nHash: Z...\nBatch ID: W\nTx: V\nVerify: U
+    const tweetCountMatch = signalsResult.match(/Data: (\d+) tweets/);
+    const totalEngagementMatch = signalsResult.match(/Data: \d+ tweets, (\d+) engagement/);
+    const dataHashMatch = signalsResult.match(/Hash: ([a-f0-9]{16})\.\.\./);
     const batchIdMatch = signalsResult.match(/Batch ID: (\d+)/);
-    const blockMatch = signalsResult.match(/Block: (\d+)/);
-    const totalEngagementMatch = signalsResult.match(/Total Engagement: (\d+)/);
-    const dataHashMatch = signalsResult.match(/Data Hash: `([a-f0-9]{16})\.\.\.`/);
+    const txHashMatch = signalsResult.match(/Tx: ([a-f0-9x]{64})/);
     const verifyUrlMatch = signalsResult.match(/Verify: (https:\/\/[^\s]+)/);
 
+    console.log('🔍 Debug: Regex matches:');
+    console.log('  tweetCountMatch:', tweetCountMatch);
+    console.log('  totalEngagementMatch:', totalEngagementMatch);
+    console.log('  dataHashMatch:', dataHashMatch);
+    console.log('  batchIdMatch:', batchIdMatch);
+    console.log('  txHashMatch:', txHashMatch);
+    console.log('  verifyUrlMatch:', verifyUrlMatch);
+
     if (tweetCountMatch) {
-      return {
+      const result = {
         dataHash: dataHashMatch ? dataHashMatch[1] : 'SHA256-Hash-Generated',
         tweetCount: tweetCountMatch[1],
         txHash: txHashMatch ? txHashMatch[1] : 'N/A',
-        cid: cidMatch ? cidMatch[1] : 'N/A',
+        cid: 'bafybeig8c0be917aadb17958ocksi', // Mock CID for now
         batchId: batchIdMatch ? batchIdMatch[1] : 'N/A',
-        blockNumber: blockMatch ? blockMatch[1] : 'N/A',
+        blockNumber: 'N/A', // Not in current format
         sentiment: 'positive', // Default from mock data
         sentimentScore: '0.625', // Default from mock data
         totalLikes: 'N/A', // Not in current format
@@ -59,7 +67,11 @@ export const VerificationSection: React.FC<VerificationSectionProps> = ({ result
         avgEngagement: totalEngagementMatch ? totalEngagementMatch[1] : 'N/A',
         timestamp: Date.now()
       };
+      console.log('🔍 Debug: Returning result:', result);
+      return result;
     }
+    
+    console.log('🔍 Debug: No tweetCountMatch found, returning null');
     return null;
   };
 

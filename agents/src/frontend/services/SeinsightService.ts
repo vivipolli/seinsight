@@ -1,15 +1,15 @@
 import { AnalysisResult } from '../types';
-import { Prompts } from './prompts';
 import { TwitterDataParser } from './twitterDataParser';
 import { ProcessingStep } from '../hooks/useProcessingProgress';
 import { ELIZA_API_URL } from '../config/api';
 import { parseHashtags, retryWithBackoff, waitForAgentResponse, type SessionResponse } from '../utils/retryUtils';
+import { Prompts } from './prompts';
 
 export class SeinsightServiceWithProgressFixed {
   private elizaosUrl = ELIZA_API_URL;
   private keywordsGeneratorId = '6045e764-c7b4-049a-9288-8a61c67c894c';
   private twitterCollectorId = '49694f6f-1a24-047d-b67f-1b3a56096764';
-  private insightsCompilerId = '8d382733-c09f-0d62-9f6e-cdb1afd3a4d0';
+  private insightsCompilerId = '27b7e5e8-c360-00b4-b824-87154c70230c';
   private oracleAgentId = '8d382733-c09f-0d62-9f6e-cdb1afd3a4d0';
   private userId = '550e8400-e29b-41d4-a716-446655440000';
   private twitterDataParser = new TwitterDataParser();
@@ -53,12 +53,13 @@ export class SeinsightServiceWithProgressFixed {
       onProgress?.('twitter');
       const twitterData = await this.collectTwitterData(hashtags, businessDescription);
 
-      // Step 3 & 4: Generate Signals and Analysis in parallel (both use same twitter data)
+      // Step 3: Generate Signals
       onProgress?.('blockchain');
-      const [signalsResult, analysisResult] = await Promise.all([
-        this.generateSignals(twitterData),
-        this.performCriticalAnalysis(twitterData)
-      ]);
+      const signalsResult = await this.generateSignals(twitterData);
+
+      // Step 4: Perform Critical Analysis
+      onProgress?.('analysis');
+      const analysisResult = await this.performCriticalAnalysis(twitterData);
       return { 
         hashtags, 
         analysis: analysisResult,
@@ -89,14 +90,12 @@ export class SeinsightServiceWithProgressFixed {
       const sessionData = await sessionResponse.json() as SessionResponse;
       const sessionId = sessionData.sessionId;
 
-      const twitterDataSummary = this.twitterDataParser.formatTwitterDataForAnalysis(twitterData);
-      const signalRequest = Prompts.getSignalGenerationPrompt(twitterDataSummary);
 
       const messageResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          content: signalRequest,
+          content: 'Execute the GENERATE_TOP3_SIGNALS action to publish signals to the blockchain.',
           metadata: { requestType: "signal-generation", action: "GENERATE_TOP3_SIGNALS" }
         })
       });
@@ -210,7 +209,7 @@ export class SeinsightServiceWithProgressFixed {
       const sessionId = sessionData.sessionId;
 
       const twitterDataSummary = this.twitterDataParser.formatTwitterDataForAnalysis(twitterData);
-      const analysisPrompt = Prompts.getCriticalAnalysisPrompt(twitterDataSummary);
+      const analysisPrompt = Prompts.getCriticalAnalysisPrompt(twitterDataSummary);  
 
       const messageResponse = await fetch(`${this.elizaosUrl}/api/messaging/sessions/${sessionId}/messages`, {
         method: 'POST',
