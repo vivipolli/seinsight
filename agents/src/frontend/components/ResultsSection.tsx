@@ -38,6 +38,12 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ results, isVisib
 
       <div style={styles.resultCard}>
         <h3 style={styles.cardTitle}>🧠 AI Critical Analysis</h3>
+        
+        <div style={styles.mockDataNotice}>
+          <strong>📝 Note:</strong> We're currently using mock Twitter data about mental health and Web3 topics due to API limitations. 
+          The analysis below is based on this mock data and may not directly reflect your specific business input.
+        </div>
+        
         <div style={styles.analysisContent}>
           <div style={styles.analysisText}>
             {results.analysis}
@@ -94,5 +100,14 @@ const styles = {
   analysisText: {
     whiteSpace: 'pre-wrap' as const,
     lineHeight: 1.6,
+  },
+  mockDataNotice: {
+    background: '#e2e8f0',
+    borderRadius: '8px',
+    padding: '1rem',
+    marginBottom: '1.5rem',
+    fontSize: '0.9rem',
+    color: '#4a5568',
+    borderLeft: '4px solid #667eea',
   },
 };
