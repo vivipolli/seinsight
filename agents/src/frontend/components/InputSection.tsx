@@ -37,6 +37,11 @@ export const InputSection: React.FC<InputSectionProps> = ({
         from the Web3 community.
       </p>
 
+      <div style={styles.performanceNotice}>
+        <strong>⏱️ Processing Time Notice:</strong> Our AI agents may take 3-10 minutes to complete the analysis. 
+        We're actively working to improve performance and reduce processing times. Thank you for your patience!
+      </div>
+
       {error && (
         <div style={styles.error}>
           {error}
@@ -135,5 +140,14 @@ const styles = {
     opacity: 0.6,
     cursor: 'not-allowed',
     transform: 'none',
+  },
+  performanceNotice: {
+    background: '#e2e8f0',
+    color: '#4a5568',
+    padding: '1rem',
+    borderRadius: '12px',
+    marginBottom: '2rem',
+    fontSize: '0.9rem',
+    lineHeight: '1.5',
   },
 };
