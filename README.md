@@ -1,4 +1,4 @@
-# 🚀 SEI Growth - Community Signal Oracle
+# 🚀 Seinsight - Community Signal Oracle
 
 > **Real-time Web3 market intelligence powered by community conversations and SEI blockchain**
 
@@ -12,7 +12,7 @@
 
 Web3 markets move at lightning speed. Traditional market research is **too slow** and **too expensive**. Entrepreneurs and investors need **real-time insights** from the community to make informed decisions.
 
-**SEI Growth solves this by:**
+**Seinsight solves this by:**
 - 🔍 **Analyzing live community conversations**
 - 📊 **Generating actionable market signals**
 - ⛓️ **Publishing to SEI blockchain oracle**
@@ -40,7 +40,7 @@ graph LR
    - Identifies key market keywords
 
 2. **🐦 Community Mining**
-   - Collects Twitter conversations
+   - Collect social media conversations
    - Analyzes sentiment and engagement
    - Extracts trending topics
 
@@ -115,26 +115,6 @@ Business Input → AI Analysis → Community Data → Market Signals → SEI Ora
 - **Decentralized**: No single point of failure
 
 ---
-
-## 💡 Market Impact
-
-### **For Entrepreneurs** 🚀
-- **Early Opportunity Detection**: Spot trends before competitors
-- **Community Validation**: Test ideas with real users
-- **Data-Driven Decisions**: Build what the market wants
-
-### **For Investors** 💰
-- **Real-Time Signals**: Access live market intelligence
-- **Risk Assessment**: Understand community sentiment
-- **Informed Decisions**: Make better investment choices
-
-### **For Web3 Ecosystem** 🌐
-- **Transparent Intelligence**: Community-driven insights
-- **Decentralized Data**: No centralized control
-- **Market Efficiency**: Faster information flow
-
----
-
 ## 🛠️ Technical Stack
 
 | Layer | Technology | Purpose |
@@ -146,6 +126,8 @@ Business Input → AI Analysis → Community Data → Market Signals → SEI Ora
 | **Frontend** | React | User interface |
 | **Deployment** | Vercel/Railway | Scalable infrastructure |
 
+**Note**: We're currently using mock Twitter data (`twitterMockData.js`) about hashtags related to health in web3, due to API rate limits on the free tier. The blockchain integration and AI analysis pipeline are fully functional with real data.
+
 ---
 
 ## 🚀 Getting Started
@@ -154,23 +136,26 @@ Business Input → AI Analysis → Community Data → Market Signals → SEI Ora
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/sei-growth.git
+git clone https://github.com/vivipolli/seinsight.git
 
-# 2. Configure environment
-cp .env.example .env
-# Add your API keys
+# 2. Create your .env file with the required variables:
+# Example:
+# OPENAI_API_KEY=your_openai_key
+# PGLITE_DATA_DIR=/path/to/your/db
+# PRIVATE_KEY=your_private_key
+# (add any other variables you need)
 
-# 3. Deploy agents
-npm run deploy:agents
+# 3. Start the agent
+elizaos start
 
-# 4. Deploy frontend
-npm run deploy:frontend
+# 4. Start the frontend
+yarn frontend:dev
 
 # 5. Start analyzing!
 ```
 
 ### **Live Demo**
-🌐 **[Try SEI Growth Now](https://seinsight-ai.vercel.app/)**
+🌐 **[Try Seinsight Now](https://seinsight-ai.vercel.app/)**
 
 ---
 
@@ -178,7 +163,7 @@ npm run deploy:frontend
 
 **Web3 markets are unpredictable. Traditional research is outdated by the time it's published.**
 
-SEI Growth provides **real-time, community-driven intelligence** that helps you:
+Seinsight provides **real-time, community-driven intelligence** that helps you:
 
 - 🎯 **Spot opportunities** before they become mainstream
 - ⚠️ **Identify risks** before they materialize  
@@ -188,22 +173,6 @@ SEI Growth provides **real-time, community-driven intelligence** that helps you:
 **The combination of AI-powered analysis and SEI's lightning-fast blockchain creates a unique oracle that captures the pulse of the Web3 community and makes it accessible to everyone.**
 
 ---
-
-## 🤝 Contributing
-
-We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for details.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-**Built with ❤️ for the Web3 community**
-
-[![SEI Network](https://img.shields.io/badge/Powered%20by-SEI%20Network-blue?style=for-the-badge)](https://sei.io/)
-[![AI Powered](https://img.shields.io/badge/AI-Powered-OpenAI-orange?style=for-the-badge)](https://openai.com/)
-
 ### **Why SEI Blockchain?**
 
 SEI's **1-second finality** and **ultra-low fees** make it perfect for real-time market signals. Traditional oracles are too slow and expensive for live market intelligence. SEI enables us to publish signals as fast as conversations happen.
@@ -252,3 +221,14 @@ Our `CommunitySignalOracle` smart contract stores market signals permanently on 
 **SEI transforms our AI analysis from ephemeral insights into permanent, verifiable market intelligence that anyone can trust and build upon.**
 
 ---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+**Built with ❤️ for the Web3 community**
+
+[![SEI Network](https://img.shields.io/badge/Powered%20by-SEI%20Network-blue?style=for-the-badge)](https://sei.io/)
+[![AI Powered](https://img.shields.io/badge/AI-Powered-OpenAI-orange?style=for-the-badge)](https://openai.com/)
